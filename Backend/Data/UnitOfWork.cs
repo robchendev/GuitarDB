@@ -6,13 +6,13 @@ namespace Backend.Data;
 public class UnitOfWork(
   DataContext context,
   IUserRepository userRepository,
-  IRoasterRepository roasterRepository,
+  IGuitarRepository guitarRepository,
   IRevisionMetadataRepository revisionMetadataRepository
 ) : IUnitOfWork
 {
   public IUserRepository UserRepository => userRepository;
 
-  public IRoasterRepository RoasterRepository => roasterRepository;
+  public IGuitarRepository GuitarRepository => guitarRepository;
 
   public IRevisionMetadataRepository RevisionMetadataRepository => revisionMetadataRepository;
 

@@ -1,0 +1,37 @@
+[
+  {
+    "Id": 1,
+    "GuitarId": 1,
+    "Name": "114ce",
+    "Description": "Initial Revision",
+    "BrandId": 1
+  },
+  {
+    "Id": 2,
+    "GuitarId": 1,
+    "Name": "114ce",
+    "Description": "Changed Text\nMultiline",
+    "BrandId": 1
+  },
+    {
+    "Id": 3,
+    "GuitarId": 1,
+    "Name": "114ce",
+    "Description": "Another changed description revision",
+    "BrandId": 1
+  },
+  {
+    "Id": 4,
+    "GuitarId": null,
+    "Name": "GPCPA5",
+    "Description": "Pending revision",
+    "BrandId": 2
+  },
+  {
+    "Id": 5,
+    "GuitarId": 2,
+    "Name": "jc43",
+    "Description": "This should be committed",
+    "BrandId": 3
+  }
+]

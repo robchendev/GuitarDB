@@ -4,7 +4,6 @@ using Backend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
@@ -24,169 +23,6 @@ namespace Backend.Migrations
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "postgis");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Backend.Entities.Bean", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Alias")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)")
-                        .HasColumnName("alias");
-
-                    b.Property<bool>("Decaf")
-                        .HasColumnType("boolean")
-                        .HasColumnName("decaf");
-
-                    b.Property<int?>("ElevationMax")
-                        .HasColumnType("integer")
-                        .HasColumnName("elevation_max");
-
-                    b.Property<int?>("ElevationMin")
-                        .HasColumnType("integer")
-                        .HasColumnName("elevation_min");
-
-                    b.Property<string>("Farm")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("farm");
-
-                    b.Property<string>("FlavorProfile")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("flavor_profile");
-
-                    b.Property<string>("Importer")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("importer");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("name");
-
-                    b.Property<string>("Process")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("process");
-
-                    b.Property<string>("Producer")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("producer");
-
-                    b.Property<string>("Region")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("region");
-
-                    b.Property<int?>("ReleaseDate")
-                        .HasColumnType("integer")
-                        .HasColumnName("release_date");
-
-                    b.Property<string>("Roast")
-                        .HasColumnType("text")
-                        .HasColumnName("roast");
-
-                    b.Property<int?>("RoasterId")
-                        .HasColumnType("integer")
-                        .HasColumnName("roaster_id");
-
-                    b.Property<int?>("RoasterRevisionId")
-                        .HasColumnType("integer")
-                        .HasColumnName("roaster_revision_id");
-
-                    b.Property<string>("Type")
-                        .HasColumnType("text")
-                        .HasColumnName("type");
-
-                    b.Property<string>("Varietal")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("varietal");
-
-                    b.Property<string>("WetMill")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("wet_mill");
-
-                    b.HasKey("Id")
-                        .HasName("pk_beans");
-
-                    b.HasIndex("RoasterRevisionId")
-                        .HasDatabaseName("ix_beans_roaster_revision_id");
-
-                    b.HasIndex("RoasterId", "Name")
-                        .IsUnique()
-                        .HasDatabaseName("ix_beans_roaster_id_name");
-
-                    b.ToTable("beans", null, t =>
-                        {
-                            t.HasCheckConstraint("CK_Bean_ReleaseDate_8Digits", "(\"release_date\" IS NULL) OR (\"release_date\" >= 10000000 AND \"release_date\" <= 99999999)");
-                        });
-                });
-
-            modelBuilder.Entity("Backend.Entities.BeanBatch", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("BeanId")
-                        .HasColumnType("integer")
-                        .HasColumnName("bean_id");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<int?>("CreatedById")
-                        .HasColumnType("integer")
-                        .HasColumnName("created_by_id");
-
-                    b.Property<DateOnly>("RoastDate")
-                        .HasColumnType("date")
-                        .HasColumnName("roast_date");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated_at");
-
-                    b.Property<int?>("UpdatedById")
-                        .HasColumnType("integer")
-                        .HasColumnName("updated_by_id");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer")
-                        .HasColumnName("user_id");
-
-                    b.HasKey("Id")
-                        .HasName("pk_bean_batches");
-
-                    b.HasIndex("BeanId")
-                        .HasDatabaseName("ix_bean_batches_bean_id");
-
-                    b.HasIndex("CreatedById")
-                        .HasDatabaseName("ix_bean_batches_created_by_id");
-
-                    b.HasIndex("UpdatedById")
-                        .HasDatabaseName("ix_bean_batches_updated_by_id");
-
-                    b.HasIndex("UserId")
-                        .HasDatabaseName("ix_bean_batches_user_id");
-
-                    b.ToTable("bean_batches", (string)null);
-                });
-
             modelBuilder.Entity("Backend.Entities.Brand", b =>
                 {
                     b.Property<int>("Id")
@@ -196,15 +32,9 @@ namespace Backend.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Alias")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)")
-                        .HasColumnName("alias");
-
-                    b.Property<string>("Country")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("country");
+                    b.Property<string>("CountryId")
+                        .HasColumnType("text")
+                        .HasColumnName("country_id");
 
                     b.Property<string>("Description")
                         .HasMaxLength(2000)
@@ -220,179 +50,391 @@ namespace Backend.Migrations
                     b.HasKey("Id")
                         .HasName("pk_brands");
 
+                    b.HasIndex("CountryId")
+                        .HasDatabaseName("ix_brands_country_id");
+
                     b.ToTable("brands", (string)null);
                 });
 
-            modelBuilder.Entity("Backend.Entities.BrewGrinderDialSetting", b =>
+            modelBuilder.Entity("Backend.Entities.Catalog.Country", b =>
                 {
-                    b.Property<int>("BrewSettingId")
-                        .HasColumnType("integer")
-                        .HasColumnName("brew_setting_id");
-
-                    b.Property<int>("GrinderDialId")
-                        .HasColumnType("integer")
-                        .HasColumnName("grinder_dial_id");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<int?>("CreatedById")
-                        .HasColumnType("integer")
-                        .HasColumnName("created_by_id");
-
-                    b.Property<float>("DialValue")
-                        .HasColumnType("real")
-                        .HasColumnName("dial_value");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated_at");
-
-                    b.Property<int?>("UpdatedById")
-                        .HasColumnType("integer")
-                        .HasColumnName("updated_by_id");
-
-                    b.HasKey("BrewSettingId", "GrinderDialId")
-                        .HasName("pk_brew_grinder_dial_settings");
-
-                    b.HasIndex("CreatedById")
-                        .HasDatabaseName("ix_brew_grinder_dial_settings_created_by_id");
-
-                    b.HasIndex("GrinderDialId")
-                        .HasDatabaseName("ix_brew_grinder_dial_settings_grinder_dial_id");
-
-                    b.HasIndex("UpdatedById")
-                        .HasDatabaseName("ix_brew_grinder_dial_settings_updated_by_id");
-
-                    b.ToTable("brew_grinder_dial_settings", (string)null);
-                });
-
-            modelBuilder.Entity("Backend.Entities.BrewMethod", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("name");
-
-                    b.HasKey("Id")
-                        .HasName("pk_brew_methods");
-
-                    b.HasIndex("Name")
-                        .IsUnique()
-                        .HasDatabaseName("ix_brew_methods_name");
-
-                    b.ToTable("brew_methods", (string)null);
-                });
-
-            modelBuilder.Entity("Backend.Entities.BrewSetting", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("BeanBatchId")
-                        .HasColumnType("integer")
-                        .HasColumnName("bean_batch_id");
-
-                    b.Property<int>("Bitter")
-                        .HasColumnType("integer")
-                        .HasColumnName("bitter");
-
-                    b.Property<int>("BrewSetupId")
-                        .HasColumnType("integer")
-                        .HasColumnName("brew_setup_id");
-
-                    b.Property<float?>("BrewTime")
-                        .HasColumnType("real")
-                        .HasColumnName("brew_time");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<int?>("CreatedById")
-                        .HasColumnType("integer")
-                        .HasColumnName("created_by_id");
-
-                    b.Property<float?>("Dose")
-                        .HasColumnType("real")
-                        .HasColumnName("dose");
-
-                    b.Property<float?>("GrindTime")
-                        .HasColumnType("real")
-                        .HasColumnName("grind_time");
-
-                    b.Property<string>("Note")
+                    b.Property<string>("Id")
                         .HasColumnType("text")
-                        .HasColumnName("note");
+                        .HasColumnName("id");
 
-                    b.Property<bool>("Recommended")
+                    b.HasKey("Id")
+                        .HasName("pk_countries");
+
+                    b.ToTable("countries", (string)null);
+                });
+
+            modelBuilder.Entity("Backend.Entities.Catalog.GuitarBodyShape", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_guitar_body_shapes");
+
+                    b.ToTable("guitar_body_shapes", (string)null);
+                });
+
+            modelBuilder.Entity("Backend.Entities.Catalog.GuitarBracingType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_guitar_bracing_types");
+
+                    b.ToTable("guitar_bracing_types", (string)null);
+                });
+
+            modelBuilder.Entity("Backend.Entities.Catalog.GuitarType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_guitar_types");
+
+                    b.ToTable("guitar_types", (string)null);
+                });
+
+            modelBuilder.Entity("Backend.Entities.Catalog.Material", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_materials");
+
+                    b.ToTable("materials", (string)null);
+                });
+
+            modelBuilder.Entity("Backend.Entities.Catalog.MaterialConstruction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_material_constructions");
+
+                    b.ToTable("material_constructions", (string)null);
+                });
+
+            modelBuilder.Entity("Backend.Entities.Catalog.MaterialGrade", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_material_grades");
+
+                    b.ToTable("material_grades", (string)null);
+                });
+
+            modelBuilder.Entity("Backend.Entities.Guitar", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("BackMaterialConstructionId")
+                        .HasColumnType("integer")
+                        .HasColumnName("back_material_construction_id");
+
+                    b.Property<int?>("BackMaterialGradeId")
+                        .HasColumnType("integer")
+                        .HasColumnName("back_material_grade_id");
+
+                    b.Property<int?>("BackMaterialId")
+                        .HasColumnType("integer")
+                        .HasColumnName("back_material_id");
+
+                    b.Property<int?>("BindingMaterialId")
+                        .HasColumnType("integer")
+                        .HasColumnName("binding_material_id");
+
+                    b.Property<int?>("BrandId")
+                        .HasColumnType("integer")
+                        .HasColumnName("brand_id");
+
+                    b.Property<int?>("BridgeMaterialConstructionId")
+                        .HasColumnType("integer")
+                        .HasColumnName("bridge_material_construction_id");
+
+                    b.Property<int?>("BridgeMaterialGradeId")
+                        .HasColumnType("integer")
+                        .HasColumnName("bridge_material_grade_id");
+
+                    b.Property<int?>("BridgeMaterialId")
+                        .HasColumnType("integer")
+                        .HasColumnName("bridge_material_id");
+
+                    b.Property<int?>("BridgePinMaterialId")
+                        .HasColumnType("integer")
+                        .HasColumnName("bridge_pin_material_id");
+
+                    b.Property<string>("CountryId")
+                        .HasColumnType("text")
+                        .HasColumnName("country_id");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)")
+                        .HasColumnName("description");
+
+                    b.Property<int?>("FingerboardMaterialConstructionId")
+                        .HasColumnType("integer")
+                        .HasColumnName("fingerboard_material_construction_id");
+
+                    b.Property<int?>("FingerboardMaterialGradeId")
+                        .HasColumnType("integer")
+                        .HasColumnName("fingerboard_material_grade_id");
+
+                    b.Property<int?>("FingerboardMaterialId")
+                        .HasColumnType("integer")
+                        .HasColumnName("fingerboard_material_id");
+
+                    b.Property<int?>("GuitarBodyShapeId")
+                        .HasColumnType("integer")
+                        .HasColumnName("guitar_body_shape_id");
+
+                    b.Property<int?>("GuitarBracingTypeId")
+                        .HasColumnType("integer")
+                        .HasColumnName("guitar_bracing_type_id");
+
+                    b.Property<int?>("GuitarTypeId")
+                        .HasColumnType("integer")
+                        .HasColumnName("guitar_type_id");
+
+                    b.Property<bool?>("IsLeftHanded")
                         .HasColumnType("boolean")
-                        .HasColumnName("recommended");
+                        .HasColumnName("is_left_handed");
 
-                    b.Property<int>("Sour")
+                    b.Property<int?>("LuthierId")
                         .HasColumnType("integer")
-                        .HasColumnName("sour");
+                        .HasColumnName("luthier_id");
 
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated_at");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("name");
 
-                    b.Property<int?>("UpdatedById")
+                    b.Property<int?>("NeckMaterialConstructionId")
                         .HasColumnType("integer")
-                        .HasColumnName("updated_by_id");
+                        .HasColumnName("neck_material_construction_id");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("NeckMaterialGradeId")
                         .HasColumnType("integer")
-                        .HasColumnName("user_id");
+                        .HasColumnName("neck_material_grade_id");
 
-                    b.Property<float?>("WaterTemperature")
-                        .HasColumnType("real")
-                        .HasColumnName("water_temperature");
+                    b.Property<int?>("NeckMaterialId")
+                        .HasColumnType("integer")
+                        .HasColumnName("neck_material_id");
 
-                    b.Property<float?>("WaterVolume")
-                        .HasColumnType("real")
-                        .HasColumnName("water_volume");
+                    b.Property<int?>("NumberOfFrets")
+                        .HasColumnType("integer")
+                        .HasColumnName("number_of_frets");
+
+                    b.Property<int?>("NumberOfStrings")
+                        .HasColumnType("integer")
+                        .HasColumnName("number_of_strings");
+
+                    b.Property<int?>("NutMaterialId")
+                        .HasColumnType("integer")
+                        .HasColumnName("nut_material_id");
+
+                    b.Property<int?>("SaddleMaterialId")
+                        .HasColumnType("integer")
+                        .HasColumnName("saddle_material_id");
+
+                    b.Property<decimal?>("ScaleLength")
+                        .HasColumnType("numeric")
+                        .HasColumnName("scale_length");
+
+                    b.Property<int?>("SidesMaterialConstructionId")
+                        .HasColumnType("integer")
+                        .HasColumnName("sides_material_construction_id");
+
+                    b.Property<int?>("SidesMaterialGradeId")
+                        .HasColumnType("integer")
+                        .HasColumnName("sides_material_grade_id");
+
+                    b.Property<int?>("SidesMaterialId")
+                        .HasColumnType("integer")
+                        .HasColumnName("sides_material_id");
+
+                    b.Property<int?>("TopMaterialConstructionId")
+                        .HasColumnType("integer")
+                        .HasColumnName("top_material_construction_id");
+
+                    b.Property<int?>("TopMaterialGradeId")
+                        .HasColumnType("integer")
+                        .HasColumnName("top_material_grade_id");
+
+                    b.Property<int?>("TopMaterialId")
+                        .HasColumnType("integer")
+                        .HasColumnName("top_material_id");
+
+                    b.Property<int?>("WeightGrams")
+                        .HasColumnType("integer")
+                        .HasColumnName("weight_grams");
 
                     b.HasKey("Id")
-                        .HasName("pk_brew_settings");
+                        .HasName("pk_guitars");
 
-                    b.HasIndex("BeanBatchId")
-                        .HasDatabaseName("ix_brew_settings_bean_batch_id");
+                    b.HasIndex("BackMaterialConstructionId")
+                        .HasDatabaseName("ix_guitars_back_material_construction_id");
 
-                    b.HasIndex("BrewSetupId")
-                        .HasDatabaseName("ix_brew_settings_brew_setup_id");
+                    b.HasIndex("BackMaterialGradeId")
+                        .HasDatabaseName("ix_guitars_back_material_grade_id");
 
-                    b.HasIndex("CreatedById")
-                        .HasDatabaseName("ix_brew_settings_created_by_id");
+                    b.HasIndex("BackMaterialId")
+                        .HasDatabaseName("ix_guitars_back_material_id");
 
-                    b.HasIndex("UpdatedById")
-                        .HasDatabaseName("ix_brew_settings_updated_by_id");
+                    b.HasIndex("BindingMaterialId")
+                        .HasDatabaseName("ix_guitars_binding_material_id");
 
-                    b.HasIndex("UserId", "BrewSetupId")
+                    b.HasIndex("BrandId")
+                        .HasDatabaseName("ix_guitars_brand_id");
+
+                    b.HasIndex("BridgeMaterialConstructionId")
+                        .HasDatabaseName("ix_guitars_bridge_material_construction_id");
+
+                    b.HasIndex("BridgeMaterialGradeId")
+                        .HasDatabaseName("ix_guitars_bridge_material_grade_id");
+
+                    b.HasIndex("BridgeMaterialId")
+                        .HasDatabaseName("ix_guitars_bridge_material_id");
+
+                    b.HasIndex("BridgePinMaterialId")
+                        .HasDatabaseName("ix_guitars_bridge_pin_material_id");
+
+                    b.HasIndex("CountryId")
+                        .HasDatabaseName("ix_guitars_country_id");
+
+                    b.HasIndex("FingerboardMaterialConstructionId")
+                        .HasDatabaseName("ix_guitars_fingerboard_material_construction_id");
+
+                    b.HasIndex("FingerboardMaterialGradeId")
+                        .HasDatabaseName("ix_guitars_fingerboard_material_grade_id");
+
+                    b.HasIndex("FingerboardMaterialId")
+                        .HasDatabaseName("ix_guitars_fingerboard_material_id");
+
+                    b.HasIndex("GuitarBodyShapeId")
+                        .HasDatabaseName("ix_guitars_guitar_body_shape_id");
+
+                    b.HasIndex("GuitarBracingTypeId")
+                        .HasDatabaseName("ix_guitars_guitar_bracing_type_id");
+
+                    b.HasIndex("GuitarTypeId")
+                        .HasDatabaseName("ix_guitars_guitar_type_id");
+
+                    b.HasIndex("LuthierId")
+                        .HasDatabaseName("ix_guitars_luthier_id");
+
+                    b.HasIndex("NeckMaterialConstructionId")
+                        .HasDatabaseName("ix_guitars_neck_material_construction_id");
+
+                    b.HasIndex("NeckMaterialGradeId")
+                        .HasDatabaseName("ix_guitars_neck_material_grade_id");
+
+                    b.HasIndex("NeckMaterialId")
+                        .HasDatabaseName("ix_guitars_neck_material_id");
+
+                    b.HasIndex("NutMaterialId")
+                        .HasDatabaseName("ix_guitars_nut_material_id");
+
+                    b.HasIndex("SaddleMaterialId")
+                        .HasDatabaseName("ix_guitars_saddle_material_id");
+
+                    b.HasIndex("SidesMaterialConstructionId")
+                        .HasDatabaseName("ix_guitars_sides_material_construction_id");
+
+                    b.HasIndex("SidesMaterialGradeId")
+                        .HasDatabaseName("ix_guitars_sides_material_grade_id");
+
+                    b.HasIndex("SidesMaterialId")
+                        .HasDatabaseName("ix_guitars_sides_material_id");
+
+                    b.HasIndex("TopMaterialConstructionId")
+                        .HasDatabaseName("ix_guitars_top_material_construction_id");
+
+                    b.HasIndex("TopMaterialGradeId")
+                        .HasDatabaseName("ix_guitars_top_material_grade_id");
+
+                    b.HasIndex("TopMaterialId")
+                        .HasDatabaseName("ix_guitars_top_material_id");
+
+                    b.HasIndex("Name", "BrandId")
                         .IsUnique()
-                        .HasDatabaseName("ix_brew_settings_user_id_brew_setup_id")
-                        .HasFilter("\"recommended\" = TRUE");
+                        .HasDatabaseName("ix_guitars_name_brand_id");
 
-                    b.ToTable("brew_settings", null, t =>
-                        {
-                            t.HasCheckConstraint("CHK_BrewSetting_DoseOrGrindTime", "(\"dose\" IS NOT NULL) OR (\"grind_time\" IS NOT NULL)");
-                        });
+                    b.ToTable("guitars", (string)null);
                 });
 
-            modelBuilder.Entity("Backend.Entities.BrewSetup", b =>
+            modelBuilder.Entity("Backend.Entities.Luthier", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -401,372 +443,307 @@ namespace Backend.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("BeanId")
-                        .HasColumnType("integer")
-                        .HasColumnName("bean_id");
+                    b.Property<string>("CountryId")
+                        .HasColumnType("text")
+                        .HasColumnName("country_id");
 
-                    b.Property<int>("BrewerId")
-                        .HasColumnType("integer")
-                        .HasColumnName("brewer_id");
+                    b.Property<string>("Description")
+                        .HasColumnType("text")
+                        .HasColumnName("description");
 
-                    b.Property<int>("GrinderId")
-                        .HasColumnType("integer")
-                        .HasColumnName("grinder_id");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("name");
 
                     b.HasKey("Id")
-                        .HasName("pk_brew_setups");
+                        .HasName("pk_luthiers");
 
-                    b.HasIndex("BeanId")
-                        .HasDatabaseName("ix_brew_setups_bean_id");
+                    b.HasIndex("CountryId")
+                        .HasDatabaseName("ix_luthiers_country_id");
 
-                    b.HasIndex("BrewerId")
-                        .HasDatabaseName("ix_brew_setups_brewer_id");
-
-                    b.HasIndex("GrinderId", "BrewerId", "BeanId")
-                        .IsUnique()
-                        .HasDatabaseName("ix_brew_setups_grinder_id_brewer_id_bean_id");
-
-                    b.ToTable("brew_setups", (string)null);
+                    b.ToTable("luthiers", (string)null);
                 });
 
-            modelBuilder.Entity("Backend.Entities.Brewer", b =>
+            modelBuilder.Entity("Backend.Entities.Revision.GuitarRevision", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasColumnName("id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<int?>("BackMaterialConstructionId")
+                        .HasColumnType("integer")
+                        .HasColumnName("back_material_construction_id");
+
+                    b.Property<int?>("BackMaterialGradeId")
+                        .HasColumnType("integer")
+                        .HasColumnName("back_material_grade_id");
+
+                    b.Property<int?>("BackMaterialId")
+                        .HasColumnType("integer")
+                        .HasColumnName("back_material_id");
+
+                    b.Property<int?>("BindingMaterialId")
+                        .HasColumnType("integer")
+                        .HasColumnName("binding_material_id");
 
                     b.Property<int?>("BrandId")
                         .HasColumnType("integer")
                         .HasColumnName("brand_id");
 
-                    b.Property<int>("BrewMethodId")
+                    b.Property<int?>("BridgeMaterialConstructionId")
                         .HasColumnType("integer")
-                        .HasColumnName("brew_method_id");
+                        .HasColumnName("bridge_material_construction_id");
+
+                    b.Property<int?>("BridgeMaterialGradeId")
+                        .HasColumnType("integer")
+                        .HasColumnName("bridge_material_grade_id");
+
+                    b.Property<int?>("BridgeMaterialId")
+                        .HasColumnType("integer")
+                        .HasColumnName("bridge_material_id");
+
+                    b.Property<int?>("BridgePinMaterialId")
+                        .HasColumnType("integer")
+                        .HasColumnName("bridge_pin_material_id");
+
+                    b.Property<string>("CountryId")
+                        .HasColumnType("text")
+                        .HasColumnName("country_id");
 
                     b.Property<string>("Description")
                         .HasMaxLength(2000)
                         .HasColumnType("character varying(2000)")
                         .HasColumnName("description");
 
-                    b.Property<string>("Model")
+                    b.Property<int?>("FingerboardMaterialConstructionId")
+                        .HasColumnType("integer")
+                        .HasColumnName("fingerboard_material_construction_id");
+
+                    b.Property<int?>("FingerboardMaterialGradeId")
+                        .HasColumnType("integer")
+                        .HasColumnName("fingerboard_material_grade_id");
+
+                    b.Property<int?>("FingerboardMaterialId")
+                        .HasColumnType("integer")
+                        .HasColumnName("fingerboard_material_id");
+
+                    b.Property<int?>("GuitarBodyShapeId")
+                        .HasColumnType("integer")
+                        .HasColumnName("guitar_body_shape_id");
+
+                    b.Property<int?>("GuitarBracingTypeId")
+                        .HasColumnType("integer")
+                        .HasColumnName("guitar_bracing_type_id");
+
+                    b.Property<int?>("GuitarId")
+                        .HasColumnType("integer")
+                        .HasColumnName("guitar_id");
+
+                    b.Property<int?>("GuitarTypeId")
+                        .HasColumnType("integer")
+                        .HasColumnName("guitar_type_id");
+
+                    b.Property<bool?>("IsLeftHanded")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_left_handed");
+
+                    b.Property<int?>("LuthierId")
+                        .HasColumnType("integer")
+                        .HasColumnName("luthier_id");
+
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)")
-                        .HasColumnName("model");
+                        .HasColumnName("name");
 
-                    b.Property<string>("ModelAlias")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("model_alias");
-
-                    b.Property<int?>("ReleaseDate")
+                    b.Property<int?>("NeckMaterialConstructionId")
                         .HasColumnType("integer")
-                        .HasColumnName("release_date");
+                        .HasColumnName("neck_material_construction_id");
 
-                    b.Property<int?>("WaterCapacity")
+                    b.Property<int?>("NeckMaterialGradeId")
                         .HasColumnType("integer")
-                        .HasColumnName("water_capacity");
+                        .HasColumnName("neck_material_grade_id");
+
+                    b.Property<int?>("NeckMaterialId")
+                        .HasColumnType("integer")
+                        .HasColumnName("neck_material_id");
+
+                    b.Property<int?>("NumberOfFrets")
+                        .HasColumnType("integer")
+                        .HasColumnName("number_of_frets");
+
+                    b.Property<int?>("NumberOfStrings")
+                        .HasColumnType("integer")
+                        .HasColumnName("number_of_strings");
+
+                    b.Property<int?>("NutMaterialId")
+                        .HasColumnType("integer")
+                        .HasColumnName("nut_material_id");
+
+                    b.Property<int?>("SaddleMaterialId")
+                        .HasColumnType("integer")
+                        .HasColumnName("saddle_material_id");
+
+                    b.Property<decimal?>("ScaleLength")
+                        .HasColumnType("numeric")
+                        .HasColumnName("scale_length");
+
+                    b.Property<int?>("SidesMaterialConstructionId")
+                        .HasColumnType("integer")
+                        .HasColumnName("sides_material_construction_id");
+
+                    b.Property<int?>("SidesMaterialGradeId")
+                        .HasColumnType("integer")
+                        .HasColumnName("sides_material_grade_id");
+
+                    b.Property<int?>("SidesMaterialId")
+                        .HasColumnType("integer")
+                        .HasColumnName("sides_material_id");
+
+                    b.Property<int?>("TopMaterialConstructionId")
+                        .HasColumnType("integer")
+                        .HasColumnName("top_material_construction_id");
+
+                    b.Property<int?>("TopMaterialGradeId")
+                        .HasColumnType("integer")
+                        .HasColumnName("top_material_grade_id");
+
+                    b.Property<int?>("TopMaterialId")
+                        .HasColumnType("integer")
+                        .HasColumnName("top_material_id");
+
+                    b.Property<int?>("WeightGrams")
+                        .HasColumnType("integer")
+                        .HasColumnName("weight_grams");
 
                     b.HasKey("Id")
-                        .HasName("pk_brewers");
+                        .HasName("pk_guitar_revisions");
+
+                    b.HasIndex("BackMaterialConstructionId")
+                        .HasDatabaseName("ix_guitar_revisions_back_material_construction_id");
+
+                    b.HasIndex("BackMaterialGradeId")
+                        .HasDatabaseName("ix_guitar_revisions_back_material_grade_id");
+
+                    b.HasIndex("BackMaterialId")
+                        .HasDatabaseName("ix_guitar_revisions_back_material_id");
+
+                    b.HasIndex("BindingMaterialId")
+                        .HasDatabaseName("ix_guitar_revisions_binding_material_id");
 
                     b.HasIndex("BrandId")
-                        .HasDatabaseName("ix_brewers_brand_id");
+                        .HasDatabaseName("ix_guitar_revisions_brand_id");
 
-                    b.HasIndex("BrewMethodId")
-                        .HasDatabaseName("ix_brewers_brew_method_id");
+                    b.HasIndex("BridgeMaterialConstructionId")
+                        .HasDatabaseName("ix_guitar_revisions_bridge_material_construction_id");
 
-                    b.ToTable("brewers", null, t =>
-                        {
-                            t.HasCheckConstraint("CK_Brewer_ReleaseDate_8Digits", "(\"release_date\" IS NULL) OR (\"release_date\" >= 10000000 AND \"release_date\" <= 99999999)");
+                    b.HasIndex("BridgeMaterialGradeId")
+                        .HasDatabaseName("ix_guitar_revisions_bridge_material_grade_id");
 
-                            t.HasCheckConstraint("CK_Brewer_WaterCapacity_Positive", "(\"water_capacity\" IS NULL) OR (\"water_capacity\" > 0)");
-                        });
+                    b.HasIndex("BridgeMaterialId")
+                        .HasDatabaseName("ix_guitar_revisions_bridge_material_id");
+
+                    b.HasIndex("BridgePinMaterialId")
+                        .HasDatabaseName("ix_guitar_revisions_bridge_pin_material_id");
+
+                    b.HasIndex("CountryId")
+                        .HasDatabaseName("ix_guitar_revisions_country_id");
+
+                    b.HasIndex("FingerboardMaterialConstructionId")
+                        .HasDatabaseName("ix_guitar_revisions_fingerboard_material_construction_id");
+
+                    b.HasIndex("FingerboardMaterialGradeId")
+                        .HasDatabaseName("ix_guitar_revisions_fingerboard_material_grade_id");
+
+                    b.HasIndex("FingerboardMaterialId")
+                        .HasDatabaseName("ix_guitar_revisions_fingerboard_material_id");
+
+                    b.HasIndex("GuitarBodyShapeId")
+                        .HasDatabaseName("ix_guitar_revisions_guitar_body_shape_id");
+
+                    b.HasIndex("GuitarBracingTypeId")
+                        .HasDatabaseName("ix_guitar_revisions_guitar_bracing_type_id");
+
+                    b.HasIndex("GuitarId")
+                        .HasDatabaseName("ix_guitar_revisions_guitar_id");
+
+                    b.HasIndex("GuitarTypeId")
+                        .HasDatabaseName("ix_guitar_revisions_guitar_type_id");
+
+                    b.HasIndex("LuthierId")
+                        .HasDatabaseName("ix_guitar_revisions_luthier_id");
+
+                    b.HasIndex("NeckMaterialConstructionId")
+                        .HasDatabaseName("ix_guitar_revisions_neck_material_construction_id");
+
+                    b.HasIndex("NeckMaterialGradeId")
+                        .HasDatabaseName("ix_guitar_revisions_neck_material_grade_id");
+
+                    b.HasIndex("NeckMaterialId")
+                        .HasDatabaseName("ix_guitar_revisions_neck_material_id");
+
+                    b.HasIndex("NutMaterialId")
+                        .HasDatabaseName("ix_guitar_revisions_nut_material_id");
+
+                    b.HasIndex("SaddleMaterialId")
+                        .HasDatabaseName("ix_guitar_revisions_saddle_material_id");
+
+                    b.HasIndex("SidesMaterialConstructionId")
+                        .HasDatabaseName("ix_guitar_revisions_sides_material_construction_id");
+
+                    b.HasIndex("SidesMaterialGradeId")
+                        .HasDatabaseName("ix_guitar_revisions_sides_material_grade_id");
+
+                    b.HasIndex("SidesMaterialId")
+                        .HasDatabaseName("ix_guitar_revisions_sides_material_id");
+
+                    b.HasIndex("TopMaterialConstructionId")
+                        .HasDatabaseName("ix_guitar_revisions_top_material_construction_id");
+
+                    b.HasIndex("TopMaterialGradeId")
+                        .HasDatabaseName("ix_guitar_revisions_top_material_grade_id");
+
+                    b.HasIndex("TopMaterialId")
+                        .HasDatabaseName("ix_guitar_revisions_top_material_id");
+
+                    b.ToTable("guitar_revisions", (string)null);
                 });
 
-            modelBuilder.Entity("Backend.Entities.BrewerStockSetting", b =>
+            modelBuilder.Entity("Backend.Entities.Revision.LuthierRevision", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasColumnName("id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<float?>("BrewTime")
-                        .HasColumnType("real")
-                        .HasColumnName("brew_time");
-
-                    b.Property<int>("BrewerId")
-                        .HasColumnType("integer")
-                        .HasColumnName("brewer_id");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("name");
-
-                    b.Property<float?>("WaterTemperature")
-                        .HasColumnType("real")
-                        .HasColumnName("water_temperature");
-
-                    b.Property<float?>("WaterVolume")
-                        .HasColumnType("real")
-                        .HasColumnName("water_volume");
-
-                    b.HasKey("Id")
-                        .HasName("pk_brewer_stock_settings");
-
-                    b.HasIndex("BrewerId")
-                        .HasDatabaseName("ix_brewer_stock_settings_brewer_id");
-
-                    b.ToTable("brewer_stock_settings", null, t =>
-                        {
-                            t.HasCheckConstraint("CK_BrewerStockSetting_BrewTime_Positive", "(\"brew_time\" IS NULL) OR (\"brew_time\" >= 0)");
-
-                            t.HasCheckConstraint("CK_BrewerStockSetting_WaterTemperature_Positive", "(\"water_temperature\" IS NULL) OR (\"water_temperature\" >= 0)");
-
-                            t.HasCheckConstraint("CK_BrewerStockSetting_WaterVolume_Positive", "(\"water_volume\" IS NULL) OR (\"water_volume\" >= 0)");
-                        });
-                });
-
-            modelBuilder.Entity("Backend.Entities.BrewerUserSetting", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<float?>("BrewTime")
-                        .HasColumnType("real")
-                        .HasColumnName("brew_time");
-
-                    b.Property<int>("BrewerId")
-                        .HasColumnType("integer")
-                        .HasColumnName("brewer_id");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<int?>("CreatedById")
-                        .HasColumnType("integer")
-                        .HasColumnName("created_by_id");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("name");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated_at");
-
-                    b.Property<int?>("UpdatedById")
-                        .HasColumnType("integer")
-                        .HasColumnName("updated_by_id");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer")
-                        .HasColumnName("user_id");
-
-                    b.Property<float?>("WaterTemperature")
-                        .HasColumnType("real")
-                        .HasColumnName("water_temperature");
-
-                    b.Property<float?>("WaterVolume")
-                        .HasColumnType("real")
-                        .HasColumnName("water_volume");
-
-                    b.HasKey("Id")
-                        .HasName("pk_brewer_user_settings");
-
-                    b.HasIndex("BrewerId")
-                        .HasDatabaseName("ix_brewer_user_settings_brewer_id");
-
-                    b.HasIndex("CreatedById")
-                        .HasDatabaseName("ix_brewer_user_settings_created_by_id");
-
-                    b.HasIndex("UpdatedById")
-                        .HasDatabaseName("ix_brewer_user_settings_updated_by_id");
-
-                    b.HasIndex("UserId")
-                        .HasDatabaseName("ix_brewer_user_settings_user_id");
-
-                    b.ToTable("brewer_user_settings", null, t =>
-                        {
-                            t.HasCheckConstraint("CK_BrewerUserSetting_BrewTime_Positive", "(\"brew_time\" IS NULL) OR (\"brew_time\" >= 0)");
-
-                            t.HasCheckConstraint("CK_BrewerUserSetting_WaterTemperature_Positive", "(\"water_temperature\" IS NULL) OR (\"water_temperature\" >= 0)");
-
-                            t.HasCheckConstraint("CK_BrewerUserSetting_WaterVolume_Positive", "(\"water_volume\" IS NULL) OR (\"water_volume\" >= 0)");
-                        });
-                });
-
-            modelBuilder.Entity("Backend.Entities.Grinder", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("BrandId")
-                        .HasColumnType("integer")
-                        .HasColumnName("brand_id");
+                    b.Property<string>("CountryId")
+                        .HasColumnType("text")
+                        .HasColumnName("country_id");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)")
+                        .HasColumnType("text")
                         .HasColumnName("description");
 
-                    b.Property<string>("Model")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("model");
-
-                    b.Property<string>("ModelAlias")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)")
-                        .HasColumnName("model_alias");
-
-                    b.Property<int?>("ReleaseDate")
+                    b.Property<int>("LuthierId")
                         .HasColumnType("integer")
-                        .HasColumnName("release_date");
-
-                    b.HasKey("Id")
-                        .HasName("pk_grinders");
-
-                    b.HasIndex("BrandId")
-                        .HasDatabaseName("ix_grinders_brand_id");
-
-                    b.ToTable("grinders", null, t =>
-                        {
-                            t.HasCheckConstraint("CK_Grinder_ReleaseDate_8Digits", "(\"release_date\" IS NULL) OR (\"release_date\" >= 10000000 AND \"release_date\" <= 99999999)");
-                        });
-                });
-
-            modelBuilder.Entity("Backend.Entities.GrinderDial", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("GrinderId")
-                        .HasColumnType("integer")
-                        .HasColumnName("grinder_id");
-
-                    b.Property<float?>("Max")
-                        .HasColumnType("real")
-                        .HasColumnName("max");
-
-                    b.Property<float?>("Min")
-                        .HasColumnType("real")
-                        .HasColumnName("min");
+                        .HasColumnName("luthier_id");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("name");
-
-                    b.Property<string>("Note")
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)")
-                        .HasColumnName("note");
-
-                    b.Property<float?>("Step")
-                        .HasColumnType("real")
-                        .HasColumnName("step");
-
-                    b.HasKey("Id")
-                        .HasName("pk_grinder_dials");
-
-                    b.HasIndex("GrinderId")
-                        .HasDatabaseName("ix_grinder_dials_grinder_id");
-
-                    b.ToTable("grinder_dials", (string)null);
-                });
-
-            modelBuilder.Entity("Backend.Entities.GrinderElementCompatibility", b =>
-                {
-                    b.Property<int>("GrinderId")
-                        .HasColumnType("integer")
-                        .HasColumnName("grinder_id");
-
-                    b.Property<int>("GrindingElementId")
-                        .HasColumnType("integer")
-                        .HasColumnName("grinding_element_id");
-
-                    b.HasKey("GrinderId", "GrindingElementId")
-                        .HasName("pk_grinder_element_compatibilities");
-
-                    b.HasIndex("GrindingElementId")
-                        .HasDatabaseName("ix_grinder_element_compatibilities_grinding_element_id");
-
-                    b.ToTable("grinder_element_compatibilities", (string)null);
-                });
-
-            modelBuilder.Entity("Backend.Entities.GrindingElement", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<float>("Diameter")
-                        .HasColumnType("real")
-                        .HasColumnName("diameter");
-
-                    b.Property<int>("GrindingMechanismId")
-                        .HasColumnType("integer")
-                        .HasColumnName("grinding_mechanism_id");
-
-                    b.HasKey("Id")
-                        .HasName("pk_grinding_elements");
-
-                    b.HasIndex("GrindingMechanismId")
-                        .HasDatabaseName("ix_grinding_elements_grinding_mechanism_id");
-
-                    b.ToTable("grinding_elements", null, t =>
-                        {
-                            t.HasCheckConstraint("CK_GrindingElement_Diameter_Positive", "\"diameter\" >= 0");
-                        });
-                });
-
-            modelBuilder.Entity("Backend.Entities.GrindingMechanism", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
+                        .HasColumnType("text")
                         .HasColumnName("name");
 
                     b.HasKey("Id")
-                        .HasName("pk_grinding_mechanisms");
+                        .HasName("pk_luthier_revision");
 
-                    b.ToTable("grinding_mechanisms", (string)null);
+                    b.HasIndex("CountryId")
+                        .HasDatabaseName("ix_luthier_revision_country_id");
+
+                    b.HasIndex("LuthierId")
+                        .HasDatabaseName("ix_luthier_revision_luthier_id");
+
+                    b.ToTable("luthier_revision", (string)null);
                 });
 
             modelBuilder.Entity("Backend.Entities.Revision.RevisionMetadata", b =>
@@ -832,117 +809,6 @@ namespace Backend.Migrations
                     b.ToTable("revision_metadatas", (string)null);
                 });
 
-            modelBuilder.Entity("Backend.Entities.Revision.RoasterRevision", b =>
-                {
-                    b.Property<int>("Id")
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    b.Property<string>("Alias")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)")
-                        .HasColumnName("alias");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)")
-                        .HasColumnName("description");
-
-                    b.Property<string>("LocationAddress")
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)")
-                        .HasColumnName("location_address");
-
-                    b.Property<Point>("LocationCoordinates")
-                        .HasColumnType("geography (point, 4326)")
-                        .HasColumnName("location_coordinates");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("name");
-
-                    b.Property<int>("RevisionMetadataId")
-                        .HasColumnType("integer")
-                        .HasColumnName("revision_metadata_id");
-
-                    b.Property<int?>("RoasterId")
-                        .HasColumnType("integer")
-                        .HasColumnName("roaster_id");
-
-                    b.Property<string>("WebsiteUrl")
-                        .HasMaxLength(300)
-                        .HasColumnType("character varying(300)")
-                        .HasColumnName("website_url");
-
-                    b.HasKey("Id")
-                        .HasName("pk_roaster_revisions");
-
-                    b.HasIndex("RevisionMetadataId")
-                        .IsUnique()
-                        .HasDatabaseName("ix_roaster_revisions_revision_metadata_id");
-
-                    b.HasIndex("RoasterId")
-                        .HasDatabaseName("ix_roaster_revisions_roaster_id");
-
-                    b.ToTable("roaster_revisions", (string)null);
-                });
-
-            modelBuilder.Entity("Backend.Entities.Roaster", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Alias")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)")
-                        .HasColumnName("alias");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)")
-                        .HasColumnName("description");
-
-                    b.Property<string>("LocationAddress")
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)")
-                        .HasColumnName("location_address");
-
-                    b.Property<Point>("LocationCoordinates")
-                        .HasColumnType("geography (point, 4326)")
-                        .HasColumnName("location_coordinates");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("name");
-
-                    b.Property<string>("WebsiteUrl")
-                        .HasMaxLength(300)
-                        .HasColumnType("character varying(300)")
-                        .HasColumnName("website_url");
-
-                    b.HasKey("Id")
-                        .HasName("pk_roasters");
-
-                    b.HasIndex("LocationCoordinates")
-                        .HasDatabaseName("ix_roasters_location_coordinates");
-
-                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("LocationCoordinates"), "GIST");
-
-                    b.HasIndex("Name", "LocationAddress")
-                        .IsUnique()
-                        .HasDatabaseName("ix_roasters_name_location_address");
-
-                    b.ToTable("roasters", (string)null);
-                });
-
             modelBuilder.Entity("Backend.Entities.Role", b =>
                 {
                     b.Property<int>("Id")
@@ -975,6 +841,78 @@ namespace Backend.Migrations
                         .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Backend.Entities.SoundProfileVote", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<byte>("AttackSlowFast")
+                        .HasColumnType("smallint")
+                        .HasColumnName("attack_slow_fast");
+
+                    b.Property<byte>("BodyThinFull")
+                        .HasColumnType("smallint")
+                        .HasColumnName("body_thin_full");
+
+                    b.Property<byte>("ClarityMuddyClear")
+                        .HasColumnType("smallint")
+                        .HasColumnName("clarity_muddy_clear");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<int?>("CreatedById")
+                        .HasColumnType("integer")
+                        .HasColumnName("created_by_id");
+
+                    b.Property<byte>("DynamicRangeSmallLarge")
+                        .HasColumnType("smallint")
+                        .HasColumnName("dynamic_range_small_large");
+
+                    b.Property<int>("GuitarId")
+                        .HasColumnType("integer")
+                        .HasColumnName("guitar_id");
+
+                    b.Property<byte>("SustainShortLong")
+                        .HasColumnType("smallint")
+                        .HasColumnName("sustain_short_long");
+
+                    b.Property<byte>("ToneBrightWarm")
+                        .HasColumnType("smallint")
+                        .HasColumnName("tone_bright_warm");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<int?>("UpdatedById")
+                        .HasColumnType("integer")
+                        .HasColumnName("updated_by_id");
+
+                    b.Property<byte>("VolumeQuietLoud")
+                        .HasColumnType("smallint")
+                        .HasColumnName("volume_quiet_loud");
+
+                    b.HasKey("Id")
+                        .HasName("pk_sound_profile_votes");
+
+                    b.HasIndex("CreatedById")
+                        .HasDatabaseName("ix_sound_profile_votes_created_by_id");
+
+                    b.HasIndex("GuitarId")
+                        .HasDatabaseName("ix_sound_profile_votes_guitar_id");
+
+                    b.HasIndex("UpdatedById")
+                        .HasDatabaseName("ix_sound_profile_votes_updated_by_id");
+
+                    b.ToTable("sound_profile_votes", (string)null);
                 });
 
             modelBuilder.Entity("Backend.Entities.User", b =>
@@ -1077,61 +1015,6 @@ namespace Backend.Migrations
                         .HasDatabaseName("ix_asp_net_users_updated_by_id");
 
                     b.ToTable("AspNetUsers", (string)null);
-                });
-
-            modelBuilder.Entity("Backend.Entities.UserBrewSetup", b =>
-                {
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer")
-                        .HasColumnName("user_id");
-
-                    b.Property<int>("BrewSetupId")
-                        .HasColumnType("integer")
-                        .HasColumnName("brew_setup_id");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<int?>("CreatedById")
-                        .HasColumnType("integer")
-                        .HasColumnName("created_by_id");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("name");
-
-                    b.Property<string>("Note")
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)")
-                        .HasColumnName("note");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated_at");
-
-                    b.Property<int?>("UpdatedById")
-                        .HasColumnType("integer")
-                        .HasColumnName("updated_by_id");
-
-                    b.HasKey("UserId", "BrewSetupId")
-                        .HasName("pk_user_brew_setups");
-
-                    b.HasIndex("BrewSetupId")
-                        .HasDatabaseName("ix_user_brew_setups_brew_setup_id");
-
-                    b.HasIndex("CreatedById")
-                        .HasDatabaseName("ix_user_brew_setups_created_by_id");
-
-                    b.HasIndex("UpdatedById")
-                        .HasDatabaseName("ix_user_brew_setups_updated_by_id");
-
-                    b.ToTable("user_brew_setups", (string)null);
                 });
 
             modelBuilder.Entity("Backend.Entities.UserRole", b =>
@@ -1264,295 +1147,467 @@ namespace Backend.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Backend.Entities.Bean", b =>
+            modelBuilder.Entity("Backend.Entities.Brand", b =>
                 {
-                    b.HasOne("Backend.Entities.Roaster", "Roaster")
-                        .WithMany("Beans")
-                        .HasForeignKey("RoasterId")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .HasConstraintName("fk_beans_roasters_roaster_id");
+                    b.HasOne("Backend.Entities.Catalog.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryId")
+                        .HasConstraintName("fk_brands_countries_country_id");
 
-                    b.HasOne("Backend.Entities.Revision.RoasterRevision", null)
-                        .WithMany("Beans")
-                        .HasForeignKey("RoasterRevisionId")
-                        .HasConstraintName("fk_beans_roaster_revisions_roaster_revision_id");
-
-                    b.Navigation("Roaster");
+                    b.Navigation("Country");
                 });
 
-            modelBuilder.Entity("Backend.Entities.BeanBatch", b =>
+            modelBuilder.Entity("Backend.Entities.Guitar", b =>
                 {
-                    b.HasOne("Backend.Entities.Bean", "Bean")
-                        .WithMany("BeanBatches")
-                        .HasForeignKey("BeanId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_bean_batches_beans_bean_id");
-
-                    b.HasOne("Backend.Entities.User", "CreatedBy")
+                    b.HasOne("Backend.Entities.Catalog.MaterialConstruction", "BackMaterialConstruction")
                         .WithMany()
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .HasConstraintName("fk_bean_batches_asp_net_users_created_by_id");
+                        .HasForeignKey("BackMaterialConstructionId")
+                        .HasConstraintName("fk_guitars_material_constructions_back_material_construction_id");
 
-                    b.HasOne("Backend.Entities.User", "UpdatedBy")
+                    b.HasOne("Backend.Entities.Catalog.MaterialGrade", "BackMaterialGrade")
                         .WithMany()
-                        .HasForeignKey("UpdatedById")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .HasConstraintName("fk_bean_batches_asp_net_users_updated_by_id");
+                        .HasForeignKey("BackMaterialGradeId")
+                        .HasConstraintName("fk_guitars_material_grades_back_material_grade_id");
 
-                    b.HasOne("Backend.Entities.User", "User")
-                        .WithMany("BeanBatches")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("fk_bean_batches_asp_net_users_user_id");
-
-                    b.Navigation("Bean");
-
-                    b.Navigation("CreatedBy");
-
-                    b.Navigation("UpdatedBy");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Backend.Entities.BrewGrinderDialSetting", b =>
-                {
-                    b.HasOne("Backend.Entities.BrewSetting", "BrewSetting")
-                        .WithMany("BrewGrinderDialSettings")
-                        .HasForeignKey("BrewSettingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_brew_grinder_dial_settings_brew_settings_brew_setting_id");
-
-                    b.HasOne("Backend.Entities.User", "CreatedBy")
+                    b.HasOne("Backend.Entities.Catalog.Material", "BackMaterial")
                         .WithMany()
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .HasConstraintName("fk_brew_grinder_dial_settings_users_created_by_id");
+                        .HasForeignKey("BackMaterialId")
+                        .HasConstraintName("fk_guitars_materials_back_material_id");
 
-                    b.HasOne("Backend.Entities.GrinderDial", "GrinderDial")
-                        .WithMany("BrewGrinderDialSettings")
-                        .HasForeignKey("GrinderDialId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("fk_brew_grinder_dial_settings_grinder_dials_grinder_dial_id");
-
-                    b.HasOne("Backend.Entities.User", "UpdatedBy")
+                    b.HasOne("Backend.Entities.Catalog.Material", "BindingMaterial")
                         .WithMany()
-                        .HasForeignKey("UpdatedById")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .HasConstraintName("fk_brew_grinder_dial_settings_users_updated_by_id");
+                        .HasForeignKey("BindingMaterialId")
+                        .HasConstraintName("fk_guitars_materials_binding_material_id");
 
-                    b.Navigation("BrewSetting");
-
-                    b.Navigation("CreatedBy");
-
-                    b.Navigation("GrinderDial");
-
-                    b.Navigation("UpdatedBy");
-                });
-
-            modelBuilder.Entity("Backend.Entities.BrewSetting", b =>
-                {
-                    b.HasOne("Backend.Entities.BeanBatch", "BeanBatch")
-                        .WithMany("BrewSettings")
-                        .HasForeignKey("BeanBatchId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("fk_brew_settings_bean_batches_bean_batch_id");
-
-                    b.HasOne("Backend.Entities.BrewSetup", "BrewSetup")
-                        .WithMany("BrewSettings")
-                        .HasForeignKey("BrewSetupId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("fk_brew_settings_brew_setups_brew_setup_id");
-
-                    b.HasOne("Backend.Entities.User", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .HasConstraintName("fk_brew_settings_asp_net_users_created_by_id");
-
-                    b.HasOne("Backend.Entities.User", "UpdatedBy")
-                        .WithMany()
-                        .HasForeignKey("UpdatedById")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .HasConstraintName("fk_brew_settings_asp_net_users_updated_by_id");
-
-                    b.HasOne("Backend.Entities.User", "User")
-                        .WithMany("BrewSettings")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("fk_brew_settings_asp_net_users_user_id");
-
-                    b.Navigation("BeanBatch");
-
-                    b.Navigation("BrewSetup");
-
-                    b.Navigation("CreatedBy");
-
-                    b.Navigation("UpdatedBy");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Backend.Entities.BrewSetup", b =>
-                {
-                    b.HasOne("Backend.Entities.Bean", "Bean")
-                        .WithMany("BrewSetups")
-                        .HasForeignKey("BeanId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("fk_brew_setups_beans_bean_id");
-
-                    b.HasOne("Backend.Entities.Brewer", "Brewer")
-                        .WithMany("BrewSetups")
-                        .HasForeignKey("BrewerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("fk_brew_setups_brewers_brewer_id");
-
-                    b.HasOne("Backend.Entities.Grinder", "Grinder")
-                        .WithMany("BrewSetups")
-                        .HasForeignKey("GrinderId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("fk_brew_setups_grinders_grinder_id");
-
-                    b.Navigation("Bean");
-
-                    b.Navigation("Brewer");
-
-                    b.Navigation("Grinder");
-                });
-
-            modelBuilder.Entity("Backend.Entities.Brewer", b =>
-                {
                     b.HasOne("Backend.Entities.Brand", "Brand")
-                        .WithMany("Brewers")
+                        .WithMany("Guitars")
                         .HasForeignKey("BrandId")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .HasConstraintName("fk_brewers_brands_brand_id");
+                        .HasConstraintName("fk_guitars_brands_brand_id");
 
-                    b.HasOne("Backend.Entities.BrewMethod", "BrewMethod")
-                        .WithMany("Brewers")
-                        .HasForeignKey("BrewMethodId")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .IsRequired()
-                        .HasConstraintName("fk_brewers_brew_methods_brew_method_id");
+                    b.HasOne("Backend.Entities.Catalog.MaterialConstruction", "BridgeMaterialConstruction")
+                        .WithMany()
+                        .HasForeignKey("BridgeMaterialConstructionId")
+                        .HasConstraintName("fk_guitars_material_constructions_bridge_material_construction");
+
+                    b.HasOne("Backend.Entities.Catalog.MaterialGrade", "BridgeMaterialGrade")
+                        .WithMany()
+                        .HasForeignKey("BridgeMaterialGradeId")
+                        .HasConstraintName("fk_guitars_material_grades_bridge_material_grade_id");
+
+                    b.HasOne("Backend.Entities.Catalog.Material", "BridgeMaterial")
+                        .WithMany()
+                        .HasForeignKey("BridgeMaterialId")
+                        .HasConstraintName("fk_guitars_materials_bridge_material_id");
+
+                    b.HasOne("Backend.Entities.Catalog.Material", "BridgePinMaterial")
+                        .WithMany()
+                        .HasForeignKey("BridgePinMaterialId")
+                        .HasConstraintName("fk_guitars_materials_bridge_pin_material_id");
+
+                    b.HasOne("Backend.Entities.Catalog.Country", "Country")
+                        .WithMany("Guitars")
+                        .HasForeignKey("CountryId")
+                        .HasConstraintName("fk_guitars_countries_country_id");
+
+                    b.HasOne("Backend.Entities.Catalog.MaterialConstruction", "FingerboardMaterialConstruction")
+                        .WithMany()
+                        .HasForeignKey("FingerboardMaterialConstructionId")
+                        .HasConstraintName("fk_guitars_material_constructions_fingerboard_material_constru");
+
+                    b.HasOne("Backend.Entities.Catalog.MaterialGrade", "FingerboardMaterialGrade")
+                        .WithMany()
+                        .HasForeignKey("FingerboardMaterialGradeId")
+                        .HasConstraintName("fk_guitars_material_grades_fingerboard_material_grade_id");
+
+                    b.HasOne("Backend.Entities.Catalog.Material", "FingerboardMaterial")
+                        .WithMany()
+                        .HasForeignKey("FingerboardMaterialId")
+                        .HasConstraintName("fk_guitars_materials_fingerboard_material_id");
+
+                    b.HasOne("Backend.Entities.Catalog.GuitarBodyShape", "GuitarBodyShape")
+                        .WithMany("Guitars")
+                        .HasForeignKey("GuitarBodyShapeId")
+                        .HasConstraintName("fk_guitars_guitar_body_shapes_guitar_body_shape_id");
+
+                    b.HasOne("Backend.Entities.Catalog.GuitarBracingType", "GuitarBracingType")
+                        .WithMany("Guitars")
+                        .HasForeignKey("GuitarBracingTypeId")
+                        .HasConstraintName("fk_guitars_guitar_bracing_types_guitar_bracing_type_id");
+
+                    b.HasOne("Backend.Entities.Catalog.GuitarType", "GuitarType")
+                        .WithMany("Guitars")
+                        .HasForeignKey("GuitarTypeId")
+                        .HasConstraintName("fk_guitars_guitar_types_guitar_type_id");
+
+                    b.HasOne("Backend.Entities.Luthier", "Luthier")
+                        .WithMany()
+                        .HasForeignKey("LuthierId")
+                        .HasConstraintName("fk_guitars_luthiers_luthier_id");
+
+                    b.HasOne("Backend.Entities.Catalog.MaterialConstruction", "NeckMaterialConstruction")
+                        .WithMany()
+                        .HasForeignKey("NeckMaterialConstructionId")
+                        .HasConstraintName("fk_guitars_material_constructions_neck_material_construction_id");
+
+                    b.HasOne("Backend.Entities.Catalog.MaterialGrade", "NeckMaterialGrade")
+                        .WithMany()
+                        .HasForeignKey("NeckMaterialGradeId")
+                        .HasConstraintName("fk_guitars_material_grades_neck_material_grade_id");
+
+                    b.HasOne("Backend.Entities.Catalog.Material", "NeckMaterial")
+                        .WithMany()
+                        .HasForeignKey("NeckMaterialId")
+                        .HasConstraintName("fk_guitars_materials_neck_material_id");
+
+                    b.HasOne("Backend.Entities.Catalog.Material", "NutMaterial")
+                        .WithMany()
+                        .HasForeignKey("NutMaterialId")
+                        .HasConstraintName("fk_guitars_materials_nut_material_id");
+
+                    b.HasOne("Backend.Entities.Catalog.Material", "SaddleMaterial")
+                        .WithMany()
+                        .HasForeignKey("SaddleMaterialId")
+                        .HasConstraintName("fk_guitars_materials_saddle_material_id");
+
+                    b.HasOne("Backend.Entities.Catalog.MaterialConstruction", "SidesMaterialConstruction")
+                        .WithMany()
+                        .HasForeignKey("SidesMaterialConstructionId")
+                        .HasConstraintName("fk_guitars_material_constructions_sides_material_construction_");
+
+                    b.HasOne("Backend.Entities.Catalog.MaterialGrade", "SidesMaterialGrade")
+                        .WithMany()
+                        .HasForeignKey("SidesMaterialGradeId")
+                        .HasConstraintName("fk_guitars_material_grades_sides_material_grade_id");
+
+                    b.HasOne("Backend.Entities.Catalog.Material", "SidesMaterial")
+                        .WithMany()
+                        .HasForeignKey("SidesMaterialId")
+                        .HasConstraintName("fk_guitars_materials_sides_material_id");
+
+                    b.HasOne("Backend.Entities.Catalog.MaterialConstruction", "TopMaterialConstruction")
+                        .WithMany()
+                        .HasForeignKey("TopMaterialConstructionId")
+                        .HasConstraintName("fk_guitars_material_constructions_top_material_construction_id");
+
+                    b.HasOne("Backend.Entities.Catalog.MaterialGrade", "TopMaterialGrade")
+                        .WithMany()
+                        .HasForeignKey("TopMaterialGradeId")
+                        .HasConstraintName("fk_guitars_material_grades_top_material_grade_id");
+
+                    b.HasOne("Backend.Entities.Catalog.Material", "TopMaterial")
+                        .WithMany()
+                        .HasForeignKey("TopMaterialId")
+                        .HasConstraintName("fk_guitars_materials_top_material_id");
+
+                    b.Navigation("BackMaterial");
+
+                    b.Navigation("BackMaterialConstruction");
+
+                    b.Navigation("BackMaterialGrade");
+
+                    b.Navigation("BindingMaterial");
 
                     b.Navigation("Brand");
 
-                    b.Navigation("BrewMethod");
+                    b.Navigation("BridgeMaterial");
+
+                    b.Navigation("BridgeMaterialConstruction");
+
+                    b.Navigation("BridgeMaterialGrade");
+
+                    b.Navigation("BridgePinMaterial");
+
+                    b.Navigation("Country");
+
+                    b.Navigation("FingerboardMaterial");
+
+                    b.Navigation("FingerboardMaterialConstruction");
+
+                    b.Navigation("FingerboardMaterialGrade");
+
+                    b.Navigation("GuitarBodyShape");
+
+                    b.Navigation("GuitarBracingType");
+
+                    b.Navigation("GuitarType");
+
+                    b.Navigation("Luthier");
+
+                    b.Navigation("NeckMaterial");
+
+                    b.Navigation("NeckMaterialConstruction");
+
+                    b.Navigation("NeckMaterialGrade");
+
+                    b.Navigation("NutMaterial");
+
+                    b.Navigation("SaddleMaterial");
+
+                    b.Navigation("SidesMaterial");
+
+                    b.Navigation("SidesMaterialConstruction");
+
+                    b.Navigation("SidesMaterialGrade");
+
+                    b.Navigation("TopMaterial");
+
+                    b.Navigation("TopMaterialConstruction");
+
+                    b.Navigation("TopMaterialGrade");
                 });
 
-            modelBuilder.Entity("Backend.Entities.BrewerStockSetting", b =>
+            modelBuilder.Entity("Backend.Entities.Luthier", b =>
                 {
-                    b.HasOne("Backend.Entities.Brewer", "Brewer")
-                        .WithMany("BrewerStockSettings")
-                        .HasForeignKey("BrewerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("fk_brewer_stock_settings_brewers_brewer_id");
-
-                    b.Navigation("Brewer");
-                });
-
-            modelBuilder.Entity("Backend.Entities.BrewerUserSetting", b =>
-                {
-                    b.HasOne("Backend.Entities.Brewer", "Brewer")
-                        .WithMany("BrewerUserSettings")
-                        .HasForeignKey("BrewerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("fk_brewer_user_settings_brewers_brewer_id");
-
-                    b.HasOne("Backend.Entities.User", "CreatedBy")
+                    b.HasOne("Backend.Entities.Catalog.Country", "Country")
                         .WithMany()
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .HasConstraintName("fk_brewer_user_settings_asp_net_users_created_by_id");
+                        .HasForeignKey("CountryId")
+                        .HasConstraintName("fk_luthiers_countries_country_id");
 
-                    b.HasOne("Backend.Entities.User", "UpdatedBy")
-                        .WithMany()
-                        .HasForeignKey("UpdatedById")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .HasConstraintName("fk_brewer_user_settings_asp_net_users_updated_by_id");
-
-                    b.HasOne("Backend.Entities.User", "User")
-                        .WithMany("BrewerUserSettings")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("fk_brewer_user_settings_asp_net_users_user_id");
-
-                    b.Navigation("Brewer");
-
-                    b.Navigation("CreatedBy");
-
-                    b.Navigation("UpdatedBy");
-
-                    b.Navigation("User");
+                    b.Navigation("Country");
                 });
 
-            modelBuilder.Entity("Backend.Entities.Grinder", b =>
+            modelBuilder.Entity("Backend.Entities.Revision.GuitarRevision", b =>
                 {
+                    b.HasOne("Backend.Entities.Catalog.MaterialConstruction", "BackMaterialConstruction")
+                        .WithMany()
+                        .HasForeignKey("BackMaterialConstructionId")
+                        .HasConstraintName("fk_guitar_revisions_material_constructions_back_material_const");
+
+                    b.HasOne("Backend.Entities.Catalog.MaterialGrade", "BackMaterialGrade")
+                        .WithMany()
+                        .HasForeignKey("BackMaterialGradeId")
+                        .HasConstraintName("fk_guitar_revisions_material_grades_back_material_grade_id");
+
+                    b.HasOne("Backend.Entities.Catalog.Material", "BackMaterial")
+                        .WithMany()
+                        .HasForeignKey("BackMaterialId")
+                        .HasConstraintName("fk_guitar_revisions_materials_back_material_id");
+
+                    b.HasOne("Backend.Entities.Catalog.Material", "BindingMaterial")
+                        .WithMany()
+                        .HasForeignKey("BindingMaterialId")
+                        .HasConstraintName("fk_guitar_revisions_materials_binding_material_id");
+
                     b.HasOne("Backend.Entities.Brand", "Brand")
-                        .WithMany("Grinders")
+                        .WithMany()
                         .HasForeignKey("BrandId")
+                        .HasConstraintName("fk_guitar_revisions_brands_brand_id");
+
+                    b.HasOne("Backend.Entities.Catalog.MaterialConstruction", "BridgeMaterialConstruction")
+                        .WithMany()
+                        .HasForeignKey("BridgeMaterialConstructionId")
+                        .HasConstraintName("fk_guitar_revisions_material_constructions_bridge_material_con");
+
+                    b.HasOne("Backend.Entities.Catalog.MaterialGrade", "BridgeMaterialGrade")
+                        .WithMany()
+                        .HasForeignKey("BridgeMaterialGradeId")
+                        .HasConstraintName("fk_guitar_revisions_material_grades_bridge_material_grade_id");
+
+                    b.HasOne("Backend.Entities.Catalog.Material", "BridgeMaterial")
+                        .WithMany()
+                        .HasForeignKey("BridgeMaterialId")
+                        .HasConstraintName("fk_guitar_revisions_materials_bridge_material_id");
+
+                    b.HasOne("Backend.Entities.Catalog.Material", "BridgePinMaterial")
+                        .WithMany()
+                        .HasForeignKey("BridgePinMaterialId")
+                        .HasConstraintName("fk_guitar_revisions_materials_bridge_pin_material_id");
+
+                    b.HasOne("Backend.Entities.Catalog.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryId")
+                        .HasConstraintName("fk_guitar_revisions_countries_country_id");
+
+                    b.HasOne("Backend.Entities.Catalog.MaterialConstruction", "FingerboardMaterialConstruction")
+                        .WithMany()
+                        .HasForeignKey("FingerboardMaterialConstructionId")
+                        .HasConstraintName("fk_guitar_revisions_material_constructions_fingerboard_materia");
+
+                    b.HasOne("Backend.Entities.Catalog.MaterialGrade", "FingerboardMaterialGrade")
+                        .WithMany()
+                        .HasForeignKey("FingerboardMaterialGradeId")
+                        .HasConstraintName("fk_guitar_revisions_material_grades_fingerboard_material_grade");
+
+                    b.HasOne("Backend.Entities.Catalog.Material", "FingerboardMaterial")
+                        .WithMany()
+                        .HasForeignKey("FingerboardMaterialId")
+                        .HasConstraintName("fk_guitar_revisions_materials_fingerboard_material_id");
+
+                    b.HasOne("Backend.Entities.Catalog.GuitarBodyShape", "GuitarBodyShape")
+                        .WithMany()
+                        .HasForeignKey("GuitarBodyShapeId")
+                        .HasConstraintName("fk_guitar_revisions_guitar_body_shapes_guitar_body_shape_id");
+
+                    b.HasOne("Backend.Entities.Catalog.GuitarBracingType", "GuitarBracingType")
+                        .WithMany()
+                        .HasForeignKey("GuitarBracingTypeId")
+                        .HasConstraintName("fk_guitar_revisions_guitar_bracing_types_guitar_bracing_type_id");
+
+                    b.HasOne("Backend.Entities.Guitar", "Guitar")
+                        .WithMany("Revisions")
+                        .HasForeignKey("GuitarId")
                         .OnDelete(DeleteBehavior.SetNull)
-                        .HasConstraintName("fk_grinders_brands_brand_id");
+                        .HasConstraintName("fk_guitar_revisions_guitars_guitar_id");
+
+                    b.HasOne("Backend.Entities.Catalog.GuitarType", "GuitarType")
+                        .WithMany()
+                        .HasForeignKey("GuitarTypeId")
+                        .HasConstraintName("fk_guitar_revisions_guitar_types_guitar_type_id");
+
+                    b.HasOne("Backend.Entities.Revision.RevisionMetadata", "RevisionMetadata")
+                        .WithOne("GuitarRevision")
+                        .HasForeignKey("Backend.Entities.Revision.GuitarRevision", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_guitar_revisions_revision_metadatas_id");
+
+                    b.HasOne("Backend.Entities.Luthier", "Luthier")
+                        .WithMany()
+                        .HasForeignKey("LuthierId")
+                        .HasConstraintName("fk_guitar_revisions_luthiers_luthier_id");
+
+                    b.HasOne("Backend.Entities.Catalog.MaterialConstruction", "NeckMaterialConstruction")
+                        .WithMany()
+                        .HasForeignKey("NeckMaterialConstructionId")
+                        .HasConstraintName("fk_guitar_revisions_material_constructions_neck_material_const");
+
+                    b.HasOne("Backend.Entities.Catalog.MaterialGrade", "NeckMaterialGrade")
+                        .WithMany()
+                        .HasForeignKey("NeckMaterialGradeId")
+                        .HasConstraintName("fk_guitar_revisions_material_grades_neck_material_grade_id");
+
+                    b.HasOne("Backend.Entities.Catalog.Material", "NeckMaterial")
+                        .WithMany()
+                        .HasForeignKey("NeckMaterialId")
+                        .HasConstraintName("fk_guitar_revisions_materials_neck_material_id");
+
+                    b.HasOne("Backend.Entities.Catalog.Material", "NutMaterial")
+                        .WithMany()
+                        .HasForeignKey("NutMaterialId")
+                        .HasConstraintName("fk_guitar_revisions_materials_nut_material_id");
+
+                    b.HasOne("Backend.Entities.Catalog.Material", "SaddleMaterial")
+                        .WithMany()
+                        .HasForeignKey("SaddleMaterialId")
+                        .HasConstraintName("fk_guitar_revisions_materials_saddle_material_id");
+
+                    b.HasOne("Backend.Entities.Catalog.MaterialConstruction", "SidesMaterialConstruction")
+                        .WithMany()
+                        .HasForeignKey("SidesMaterialConstructionId")
+                        .HasConstraintName("fk_guitar_revisions_material_constructions_sides_material_cons");
+
+                    b.HasOne("Backend.Entities.Catalog.MaterialGrade", "SidesMaterialGrade")
+                        .WithMany()
+                        .HasForeignKey("SidesMaterialGradeId")
+                        .HasConstraintName("fk_guitar_revisions_material_grades_sides_material_grade_id");
+
+                    b.HasOne("Backend.Entities.Catalog.Material", "SidesMaterial")
+                        .WithMany()
+                        .HasForeignKey("SidesMaterialId")
+                        .HasConstraintName("fk_guitar_revisions_materials_sides_material_id");
+
+                    b.HasOne("Backend.Entities.Catalog.MaterialConstruction", "TopMaterialConstruction")
+                        .WithMany()
+                        .HasForeignKey("TopMaterialConstructionId")
+                        .HasConstraintName("fk_guitar_revisions_material_constructions_top_material_constr");
+
+                    b.HasOne("Backend.Entities.Catalog.MaterialGrade", "TopMaterialGrade")
+                        .WithMany()
+                        .HasForeignKey("TopMaterialGradeId")
+                        .HasConstraintName("fk_guitar_revisions_material_grades_top_material_grade_id");
+
+                    b.HasOne("Backend.Entities.Catalog.Material", "TopMaterial")
+                        .WithMany()
+                        .HasForeignKey("TopMaterialId")
+                        .HasConstraintName("fk_guitar_revisions_materials_top_material_id");
+
+                    b.Navigation("BackMaterial");
+
+                    b.Navigation("BackMaterialConstruction");
+
+                    b.Navigation("BackMaterialGrade");
+
+                    b.Navigation("BindingMaterial");
 
                     b.Navigation("Brand");
+
+                    b.Navigation("BridgeMaterial");
+
+                    b.Navigation("BridgeMaterialConstruction");
+
+                    b.Navigation("BridgeMaterialGrade");
+
+                    b.Navigation("BridgePinMaterial");
+
+                    b.Navigation("Country");
+
+                    b.Navigation("FingerboardMaterial");
+
+                    b.Navigation("FingerboardMaterialConstruction");
+
+                    b.Navigation("FingerboardMaterialGrade");
+
+                    b.Navigation("Guitar");
+
+                    b.Navigation("GuitarBodyShape");
+
+                    b.Navigation("GuitarBracingType");
+
+                    b.Navigation("GuitarType");
+
+                    b.Navigation("Luthier");
+
+                    b.Navigation("NeckMaterial");
+
+                    b.Navigation("NeckMaterialConstruction");
+
+                    b.Navigation("NeckMaterialGrade");
+
+                    b.Navigation("NutMaterial");
+
+                    b.Navigation("RevisionMetadata");
+
+                    b.Navigation("SaddleMaterial");
+
+                    b.Navigation("SidesMaterial");
+
+                    b.Navigation("SidesMaterialConstruction");
+
+                    b.Navigation("SidesMaterialGrade");
+
+                    b.Navigation("TopMaterial");
+
+                    b.Navigation("TopMaterialConstruction");
+
+                    b.Navigation("TopMaterialGrade");
                 });
 
-            modelBuilder.Entity("Backend.Entities.GrinderDial", b =>
+            modelBuilder.Entity("Backend.Entities.Revision.LuthierRevision", b =>
                 {
-                    b.HasOne("Backend.Entities.Grinder", "Grinder")
-                        .WithMany("GrinderDials")
-                        .HasForeignKey("GrinderId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("fk_grinder_dials_grinders_grinder_id");
+                    b.HasOne("Backend.Entities.Catalog.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryId")
+                        .HasConstraintName("fk_luthier_revision_countries_country_id");
 
-                    b.Navigation("Grinder");
-                });
-
-            modelBuilder.Entity("Backend.Entities.GrinderElementCompatibility", b =>
-                {
-                    b.HasOne("Backend.Entities.Grinder", "Grinder")
-                        .WithMany("CompatibleParts")
-                        .HasForeignKey("GrinderId")
+                    b.HasOne("Backend.Entities.Revision.RevisionMetadata", "RevisionMetadata")
+                        .WithOne("LuthierRevision")
+                        .HasForeignKey("Backend.Entities.Revision.LuthierRevision", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_grinder_element_compatibilities_grinders_grinder_id");
+                        .HasConstraintName("fk_luthier_revision_revision_metadatas_id");
 
-                    b.HasOne("Backend.Entities.GrindingElement", "GrindingElement")
-                        .WithMany("CompatibleGrinders")
-                        .HasForeignKey("GrindingElementId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("Backend.Entities.Luthier", "Luthier")
+                        .WithMany("Revisions")
+                        .HasForeignKey("LuthierId")
+                        .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired()
-                        .HasConstraintName("fk_grinder_element_compatibilities_grinding_elements_grinding_");
+                        .HasConstraintName("fk_luthier_revision_luthiers_luthier_id");
 
-                    b.Navigation("Grinder");
+                    b.Navigation("Country");
 
-                    b.Navigation("GrindingElement");
-                });
+                    b.Navigation("Luthier");
 
-            modelBuilder.Entity("Backend.Entities.GrindingElement", b =>
-                {
-                    b.HasOne("Backend.Entities.GrindingMechanism", "GrindingMechanism")
-                        .WithMany("GrinderParts")
-                        .HasForeignKey("GrindingMechanismId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("fk_grinding_elements_grinding_mechanisms_grinding_mechanism_id");
-
-                    b.Navigation("GrindingMechanism");
+                    b.Navigation("RevisionMetadata");
                 });
 
             modelBuilder.Entity("Backend.Entities.Revision.RevisionMetadata", b =>
@@ -1582,24 +1637,32 @@ namespace Backend.Migrations
                     b.Navigation("UpdatedBy");
                 });
 
-            modelBuilder.Entity("Backend.Entities.Revision.RoasterRevision", b =>
+            modelBuilder.Entity("Backend.Entities.SoundProfileVote", b =>
                 {
-                    b.HasOne("Backend.Entities.Revision.RevisionMetadata", "RevisionMetadata")
-                        .WithOne("RoasterRevision")
-                        .HasForeignKey("Backend.Entities.Revision.RoasterRevision", "RevisionMetadataId")
+                    b.HasOne("Backend.Entities.User", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .HasConstraintName("fk_sound_profile_votes_users_created_by_id");
+
+                    b.HasOne("Backend.Entities.Guitar", "Guitar")
+                        .WithMany()
+                        .HasForeignKey("GuitarId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_roaster_revisions_revision_metadatas_revision_metadata_id");
+                        .HasConstraintName("fk_sound_profile_votes_guitars_guitar_id");
 
-                    b.HasOne("Backend.Entities.Roaster", "Roaster")
-                        .WithMany("Revisions")
-                        .HasForeignKey("RoasterId")
+                    b.HasOne("Backend.Entities.User", "UpdatedBy")
+                        .WithMany()
+                        .HasForeignKey("UpdatedById")
                         .OnDelete(DeleteBehavior.SetNull)
-                        .HasConstraintName("fk_roaster_revisions_roasters_roaster_id");
+                        .HasConstraintName("fk_sound_profile_votes_users_updated_by_id");
 
-                    b.Navigation("RevisionMetadata");
+                    b.Navigation("CreatedBy");
 
-                    b.Navigation("Roaster");
+                    b.Navigation("Guitar");
+
+                    b.Navigation("UpdatedBy");
                 });
 
             modelBuilder.Entity("Backend.Entities.User", b =>
@@ -1611,43 +1674,6 @@ namespace Backend.Migrations
                         .HasConstraintName("fk_asp_net_users_asp_net_users_updated_by_id");
 
                     b.Navigation("UpdatedBy");
-                });
-
-            modelBuilder.Entity("Backend.Entities.UserBrewSetup", b =>
-                {
-                    b.HasOne("Backend.Entities.BrewSetup", "BrewSetup")
-                        .WithMany("UserBrewSetups")
-                        .HasForeignKey("BrewSetupId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("fk_user_brew_setups_brew_setups_brew_setup_id");
-
-                    b.HasOne("Backend.Entities.User", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .HasConstraintName("fk_user_brew_setups_asp_net_users_created_by_id");
-
-                    b.HasOne("Backend.Entities.User", "UpdatedBy")
-                        .WithMany()
-                        .HasForeignKey("UpdatedById")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .HasConstraintName("fk_user_brew_setups_asp_net_users_updated_by_id");
-
-                    b.HasOne("Backend.Entities.User", "User")
-                        .WithMany("UserBrewSetups")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("fk_user_brew_setups_asp_net_users_user_id");
-
-                    b.Navigation("BrewSetup");
-
-                    b.Navigation("CreatedBy");
-
-                    b.Navigation("UpdatedBy");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Backend.Entities.UserRole", b =>
@@ -1711,90 +1737,46 @@ namespace Backend.Migrations
                         .HasConstraintName("fk_asp_net_user_tokens_asp_net_users_user_id");
                 });
 
-            modelBuilder.Entity("Backend.Entities.Bean", b =>
-                {
-                    b.Navigation("BeanBatches");
-
-                    b.Navigation("BrewSetups");
-                });
-
-            modelBuilder.Entity("Backend.Entities.BeanBatch", b =>
-                {
-                    b.Navigation("BrewSettings");
-                });
-
             modelBuilder.Entity("Backend.Entities.Brand", b =>
                 {
-                    b.Navigation("Brewers");
-
-                    b.Navigation("Grinders");
+                    b.Navigation("Guitars");
                 });
 
-            modelBuilder.Entity("Backend.Entities.BrewMethod", b =>
+            modelBuilder.Entity("Backend.Entities.Catalog.Country", b =>
                 {
-                    b.Navigation("Brewers");
+                    b.Navigation("Guitars");
                 });
 
-            modelBuilder.Entity("Backend.Entities.BrewSetting", b =>
+            modelBuilder.Entity("Backend.Entities.Catalog.GuitarBodyShape", b =>
                 {
-                    b.Navigation("BrewGrinderDialSettings");
+                    b.Navigation("Guitars");
                 });
 
-            modelBuilder.Entity("Backend.Entities.BrewSetup", b =>
+            modelBuilder.Entity("Backend.Entities.Catalog.GuitarBracingType", b =>
                 {
-                    b.Navigation("BrewSettings");
-
-                    b.Navigation("UserBrewSetups");
+                    b.Navigation("Guitars");
                 });
 
-            modelBuilder.Entity("Backend.Entities.Brewer", b =>
+            modelBuilder.Entity("Backend.Entities.Catalog.GuitarType", b =>
                 {
-                    b.Navigation("BrewSetups");
-
-                    b.Navigation("BrewerStockSettings");
-
-                    b.Navigation("BrewerUserSettings");
+                    b.Navigation("Guitars");
                 });
 
-            modelBuilder.Entity("Backend.Entities.Grinder", b =>
+            modelBuilder.Entity("Backend.Entities.Guitar", b =>
                 {
-                    b.Navigation("BrewSetups");
-
-                    b.Navigation("CompatibleParts");
-
-                    b.Navigation("GrinderDials");
+                    b.Navigation("Revisions");
                 });
 
-            modelBuilder.Entity("Backend.Entities.GrinderDial", b =>
+            modelBuilder.Entity("Backend.Entities.Luthier", b =>
                 {
-                    b.Navigation("BrewGrinderDialSettings");
-                });
-
-            modelBuilder.Entity("Backend.Entities.GrindingElement", b =>
-                {
-                    b.Navigation("CompatibleGrinders");
-                });
-
-            modelBuilder.Entity("Backend.Entities.GrindingMechanism", b =>
-                {
-                    b.Navigation("GrinderParts");
+                    b.Navigation("Revisions");
                 });
 
             modelBuilder.Entity("Backend.Entities.Revision.RevisionMetadata", b =>
                 {
-                    b.Navigation("RoasterRevision");
-                });
+                    b.Navigation("GuitarRevision");
 
-            modelBuilder.Entity("Backend.Entities.Revision.RoasterRevision", b =>
-                {
-                    b.Navigation("Beans");
-                });
-
-            modelBuilder.Entity("Backend.Entities.Roaster", b =>
-                {
-                    b.Navigation("Beans");
-
-                    b.Navigation("Revisions");
+                    b.Navigation("LuthierRevision");
                 });
 
             modelBuilder.Entity("Backend.Entities.Role", b =>
@@ -1804,14 +1786,6 @@ namespace Backend.Migrations
 
             modelBuilder.Entity("Backend.Entities.User", b =>
                 {
-                    b.Navigation("BeanBatches");
-
-                    b.Navigation("BrewSettings");
-
-                    b.Navigation("BrewerUserSettings");
-
-                    b.Navigation("UserBrewSetups");
-
                     b.Navigation("UserRoles");
                 });
 #pragma warning restore 612, 618

@@ -1,6 +1,6 @@
 namespace Backend.DTOs;
 
-public class RoasterSeedDto
+public class GuitarSeedDto
 {
   public string Name { get; set; } = string.Empty;
   public string? Alias { get; set; }

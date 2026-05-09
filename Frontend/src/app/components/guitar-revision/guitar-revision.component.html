@@ -1,0 +1,219 @@
+<!-- TODO: add loading checks -->
+<!-- TODO: also display the snapshot below as well -->
+<h2>
+  Guitar Revision (ID: {{ guitarRevisionDiff?.guitarId ?? "pending" }})
+</h2>
+@if (guitarRevisionDiff) {
+  <table>
+    <tr>
+      <th>Guitar ID: {{ guitarRevisionDiff.guitarId ?? "pending" }}</th>
+      @if (guitarRevisionDiff.changes.version.old) {
+        <th>Old (Version {{ guitarRevisionDiff.changes.version.old }})</th>
+      } @else {
+        <th>Old (Doesn't exist)</th>
+      }
+      <th>
+        @if (guitarRevisionDiff.changes.version.new) {
+          New (Version {{ guitarRevisionDiff.changes.version.new }})
+        } @else {
+          New (Version pending)
+        }
+        @if (
+          accountService.currentUser() &&
+          accountService.currentUser()?.username ==
+            guitarRevisionDiff.changes.createdBy.new &&
+          guitarRevisionDiff.changes.version.new == null
+        ) {
+          <a
+            [routerLink]="[
+              '/guitars',
+              guitarId ?? 'new',
+              'revisions',
+              guitarRevisionDiff.changes.id.new,
+              'edit',
+            ]"
+          >
+            Edit This Revision
+          </a>
+        }
+      </th>
+    </tr>
+    <tr
+      app-revision-diff-row
+      key="Revision ID"
+      [value]="guitarRevisionDiff.changes.id"
+    ></tr>
+    <tr
+      app-revision-diff-row
+      key="Version"
+      [value]="guitarRevisionDiff.changes.version"
+      [oldEmptyFallback]="guitarRevisionDiff.changes.id.old ? 'pending' : ''"
+      newEmptyFallback="pending"
+    ></tr>
+    <tr>
+      @if (guitarRevisionDiff.changes.createdBy) {
+        <td>Author</td>
+        <td>
+          @if (guitarRevisionDiff.changes.createdBy.old != null) {
+            <a
+              [routerLink]="[
+                '/users',
+                guitarRevisionDiff.changes.createdBy.old,
+              ]"
+            >
+              {{ `@${guitarRevisionDiff.changes.createdBy.old}` }}
+            </a>
+          }
+        </td>
+        <td>
+          @if (guitarRevisionDiff.changes.createdBy.new != null) {
+            <a
+              [routerLink]="[
+                '/users',
+                guitarRevisionDiff.changes.createdBy.new,
+              ]"
+            >
+              {{ `@${guitarRevisionDiff.changes.createdBy.new}` }}
+            </a>
+          }
+        </td>
+      }
+    </tr>
+    <tr
+      app-revision-diff-row
+      key="Date"
+      [value]="guitarRevisionDiff.changes.createdAt"
+    ></tr>
+    <tr>
+      @if (guitarRevisionDiff.changes.comment) {
+        <td class="attribute">Comment</td>
+        <td>
+          @if (guitarRevisionDiff.changes.comment.old != null) {
+            <div class="multiline">
+              @for (
+                paragraph of getParagraphs(
+                  guitarRevisionDiff.changes.comment.old
+                );
+                track $index
+              ) {
+                <p>{{ paragraph }}</p>
+              }
+            </div>
+          }
+        </td>
+        <td>
+          @if (guitarRevisionDiff.changes.comment.new != null) {
+            <div class="multiline">
+              @for (
+                paragraph of getParagraphs(
+                  guitarRevisionDiff.changes.comment.new
+                );
+                track $index
+              ) {
+                <p>{{ paragraph }}</p>
+              }
+            </div>
+          }
+        </td>
+      }
+    </tr>
+    <tr
+      app-revision-diff-row
+      key="Name"
+      [value]="guitarRevisionDiff.changes.name"
+      [runDiff]="true"
+    ></tr>
+    <tr
+      app-revision-diff-row
+      key="Alias"
+      [value]="guitarRevisionDiff.changes.alias"
+      [runDiff]="true"
+    ></tr>
+    <tr
+      app-revision-diff-row
+      key="Address"
+      [value]="guitarRevisionDiff.changes.locationAddress"
+      [runDiff]="true"
+    ></tr>
+    <tr>
+      @if (guitarRevisionDiff.changes.locationCoordinates) {
+        <td class="attribute">Coordinates</td>
+        <td>
+          @if (guitarRevisionDiff.changes.locationCoordinates.old != null) {
+            @for (
+              part of getCoordinatesDiffParts(
+                false,
+                guitarRevisionDiff.changes.locationCoordinates.old,
+                guitarRevisionDiff.changes.locationCoordinates.new
+              );
+              track $index
+            ) {
+              <span [class]="part.type">{{ part.value }}</span>
+            }
+          }
+        </td>
+        <td>
+          @for (
+            part of getCoordinatesDiffParts(
+              true,
+              guitarRevisionDiff.changes.locationCoordinates.old,
+              guitarRevisionDiff.changes.locationCoordinates.new
+            );
+            track $index
+          ) {
+            <span [class]="part.type">{{ part.value }}</span>
+          }
+        </td>
+      }
+    </tr>
+    <tr
+      app-revision-diff-row
+      key="Website URL"
+      [value]="guitarRevisionDiff.changes.websiteUrl"
+      [runDiff]="true"
+    ></tr>
+    <tr>
+      @if (guitarRevisionDiff.changes.description) {
+        <td class="attribute">Description</td>
+        <td>
+          <div class="multiline">
+            @for (
+              paragraph of getMultilineDiffParts(
+                false,
+                guitarRevisionDiff.changes.description.old,
+                guitarRevisionDiff.changes.description.new
+              );
+              track $index
+            ) {
+              <p>
+                @for (part of paragraph.parts; track $index) {
+                  <span [class]="part.type">{{ part.value }}</span>
+                }
+              </p>
+            }
+          </div>
+        </td>
+        <td>
+          <div class="multiline">
+            @for (
+              paragraph of getMultilineDiffParts(
+                true,
+                guitarRevisionDiff.changes.description.old,
+                guitarRevisionDiff.changes.description.new
+              );
+              track $index
+            ) {
+              <p>
+                @for (part of paragraph.parts; track $index) {
+                  <span [class]="part.type">{{ part.value }}</span>
+                }
+              </p>
+            }
+          </div>
+        </td>
+      }
+    </tr>
+  </table>
+} @else if (!loadingService.isLoadingId(loadingKey)) {
+  <p>Could not load data</p>
+}

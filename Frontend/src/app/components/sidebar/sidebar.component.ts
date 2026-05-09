@@ -34,6 +34,6 @@ export class SidebarComponent {
   usersIcon = matSupervisorAccountOutline;
   shieldIcon = matShieldOutline;
   userManagerIcon = matAdminPanelSettingsOutline;
-  roasterIcon = matWarehouseOutline;
+  guitarIcon = matWarehouseOutline;
   placeholderIcon = matSquareOutline;
 }

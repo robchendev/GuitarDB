@@ -5,7 +5,7 @@ namespace Backend.Interfaces;
 public interface IUnitOfWork
 {
   IUserRepository UserRepository { get; }
-  IRoasterRepository RoasterRepository { get; }
+  IGuitarRepository GuitarRepository { get; }
   IRevisionMetadataRepository RevisionMetadataRepository { get; }
 
   Task<bool> SaveAllAsync();

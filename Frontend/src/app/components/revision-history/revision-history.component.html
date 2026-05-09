@@ -3,9 +3,9 @@
   !entityName &&
   (paginatedResultSignal()?.items?.length ?? 0) === 0
 ) {
-  <p>Failed to load roaster.</p>
+  <p>Failed to load guitar.</p>
 }
-<h2>Revision History for Roaster "{{ entityName }}"</h2>
+<h2>Revision History for Guitar "{{ entityName }}"</h2>
 <app-pagination-controls
   [(page)]="paginationSignals.page.signal"
   [(pageSize)]="paginationSignals.pageSize.signal"
@@ -41,8 +41,8 @@
               r{{ revision.id }}
             </a>
           } @else {
-            <!-- Roaster ID here only keeps the URL uniform, it doesn't actually do anything when viewing an initial revision -->
-            <a [routerLink]="['/roasters', entityId, 'revisions', revision.id]">
+            <!-- Guitar ID here only keeps the URL uniform, it doesn't actually do anything when viewing an initial revision -->
+            <a [routerLink]="['/guitars', entityId, 'revisions', revision.id]">
               r{{ revision.id }}
             </a>
           }
@@ -69,5 +69,5 @@
   (paginatedResultSignal()?.items?.length ?? 0) === 0 &&
   !loadingService.isLoadingId(loadingKey)
 ) {
-  <p>No roasters revisions found!</p>
+  <p>No guitars revisions found!</p>
 }

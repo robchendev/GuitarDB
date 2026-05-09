@@ -1,4 +1,5 @@
 using Backend.Entities;
+using Backend.Entities.Catalog;
 using Backend.Entities.Revision;
 using Backend.Interfaces.Entities;
 using Microsoft.AspNetCore.Identity;
@@ -19,40 +20,34 @@ public class DataContext(DbContextOptions options) : IdentityDbContext<
   IdentityUserToken<int>
 >(options)
 {
-  // entities
+  // revisionable entitites
+  public DbSet<Guitar> Guitars { get; set; }
+  public DbSet<Luthier> Luthiers { get; set; }
   public DbSet<Brand> Brands { get; set; } // Equipment Brands
-  public DbSet<Roaster> Roasters { get; set; }
-  public DbSet<Bean> Beans { get; set; }
-  public DbSet<BrewMethod> BrewMethods { get; set; }
-  public DbSet<Brewer> Brewers { get; set; }
-  public DbSet<BeanBatch> BeanBatches { get; set; }
-  public DbSet<Grinder> Grinders { get; set; }
-  public DbSet<GrindingElement> GrindingElements { get; set; } // Burrs, Blades
-  public DbSet<GrindingMechanism> GrindingMechanisms { get; set; } // Flat Burr, Conical Burr, Blade
-  public DbSet<GrinderElementCompatibility> GrinderElementCompatibilities { get; set; } // 54mm Flat Burr used by DF54
-  public DbSet<BrewSetup> BrewSetups { get; set; }
-  public DbSet<UserBrewSetup> UserBrewSetups { get; set; }
-  public DbSet<GrinderDial> GrinderDials { get; set; }
-  public DbSet<BrewGrinderDialSetting> BrewGrinderDialSettings { get; set; }
-  public DbSet<BrewSetting> BrewSettings { get; set; }
-  public DbSet<BrewerStockSetting> BrewerStockSettings { get; set; }
-  public DbSet<BrewerUserSetting> BrewerUserSettings { get; set; }
+
+  // catalog entities (do not have navigation nor revision)
+  public DbSet<GuitarBodyShape> GuitarBodyShapes { get; set; }
+  public DbSet<GuitarBracingType> GuitarBracingTypes { get; set; }
+  public DbSet<GuitarType> GuitarTypes { get; set; }
+  public DbSet<Material> Materials { get; set; }
+  public DbSet<MaterialConstruction> MaterialConstructions { get; set; }
+  public DbSet<MaterialGrade> MaterialGrades { get; set; }
+  public DbSet<Country> Countries { get; set; }
+
+  // one off entities (do not have revision)
+  public DbSet<SoundProfileVote> SoundProfileVotes { get; set; }
 
   // revision system
   public DbSet<RevisionMetadata> RevisionMetadatas { get; set; }
-  public DbSet<RoasterRevision> RoasterRevisions { get; set; }
+  public DbSet<GuitarRevision> GuitarRevisions { get; set; }
+  public DbSet<LuthierRevision> LuthierRevision { get; set; }
 
   protected override void OnModelCreating(ModelBuilder builder)
   {
     base.OnModelCreating(builder);
 
     /***** Setup Relations on Entities with Audit Data *****/
-    ConfigureAuditableEntity(builder.Entity<BeanBatch>());
-    ConfigureAuditableEntity(builder.Entity<UserBrewSetup>());
-    ConfigureAuditableEntity(builder.Entity<BrewSetting>());
-    ConfigureAuditableEntity(builder.Entity<BrewerUserSetting>());
-    ConfigureAuditableEntity(builder.Entity<BrewGrinderDialSetting>());
-    ConfigureAuditableEntity(builder.Entity<BrewerUserSetting>());
+    ConfigureAuditableEntity(builder.Entity<SoundProfileVote>());
     ConfigureAuditableEntity(builder.Entity<RevisionMetadata>());
 
     /***** Setup Relations on Entities *****/

@@ -5,12 +5,11 @@ namespace Backend.Entities.Revision;
 
 public class RevisionMetadata : BaseAuditableEntity
 {
-  // RevisionMetadata.Id are the same as RoasterRevision.Id, etc.
+  // RevisionMetadata.Id are the same as GuitarRevision.Id, etc.
   // Meaning we could have this
-  // RoasterRevision 1 RevisionMetadata 1
-  // BrewerRevision  2 RevisionMetadata 2
-  // BrewerRevision  3 RevisionMetadata 3
-  // GrinderRevision 4 RevisionMetadata 4
+  // GuitarRevision     1 RevisionMetadata 1
+  // LuthierRevision    2 RevisionMetadata 2
+  // TechniqueRevision  3 RevisionMetadata 3
   public RevisionStatus Status { get; set; }
   public int? ParentRevisionId { get; set; }
   public int? Version { get; set; }
@@ -19,5 +18,6 @@ public class RevisionMetadata : BaseAuditableEntity
   public RevisionMetadata ParentRevision { get; set; } = null!;
 
   // Navigation to exactly one of the revision types
-  public RoasterRevision? RoasterRevision { get; set; } = null!;
+  public GuitarRevision? GuitarRevision { get; set; } = null!;
+  public LuthierRevision? LuthierRevision { get; set; } = null!;
 }

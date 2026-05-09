@@ -1,5 +1,5 @@
 import { GenericSearchParams } from './pagination';
-import { RevisionStatus } from './roaster';
+import { RevisionStatus } from './guitar';
 
 export interface RevisionMetadataExcerpt {
   id: number;

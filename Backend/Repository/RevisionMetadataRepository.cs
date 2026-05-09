@@ -23,7 +23,8 @@ public class RevisionMetadataRepository(DataContext context) : IRevisionMetadata
         Version = rm.Version,
         Comment = rm.Comment,
         EntityType =
-          rm.RoasterRevision != null ? "Roaster" :
+          rm.GuitarRevision != null ? "Guitar" :
+          rm.LuthierRevision != null ? "Luthier" :
           // rm.AnotherEntityRevisions != null ? "AnotherEntity" :
           "Unknown",
         CreatedAt = rm.CreatedAt,
@@ -185,13 +186,16 @@ public static class RevisionMetadataExtensions
       Version = rm.Version,
       Comment = rm.Comment,
       EntityType =
-        rm.RoasterRevision != null ? "Roaster" :
+        rm.GuitarRevision != null ? "Guitar" :
+        rm.LuthierRevision != null ? "Luthier" :
         "Unknown",
       EntityName =
-        rm.RoasterRevision != null ? rm.RoasterRevision.Name :
+        rm.GuitarRevision != null ? rm.GuitarRevision.Name :
+        rm.LuthierRevision != null ? rm.LuthierRevision.Name :
         "Unknown",
       EntityId =
-        rm.RoasterRevision != null ? rm.RoasterRevision.RoasterId :
+        rm.GuitarRevision != null ? rm.GuitarRevision.GuitarId :
+        rm.LuthierRevision != null ? rm.LuthierRevision.LuthierId :
         null,
       CreatedAt = rm.CreatedAt,
       CreatedBy = rm.CreatedBy == null ? null : rm.CreatedBy.UserName,

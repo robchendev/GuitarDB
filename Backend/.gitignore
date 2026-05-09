@@ -44,7 +44,7 @@ bin
 Thumbs.db
 
 # SQLite
-coffee.db
+guitar.db
 *.db-shm
 *.db-wal
 

@@ -1,5 +1,5 @@
 import { Change, diffChars, diffWords } from 'diff';
-import { LocationCoordinates } from '../models/roaster';
+import { LocationCoordinates } from '../models/guitar';
 
 export interface DiffPart {
   value: string;

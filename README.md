@@ -33,7 +33,7 @@ During the setup, make sure to also install PostGIS. This is done through Applic
 
 The backend expects to connect using the following credentials, also defined in `appsettings.Development.json`:
 
-- Database: coffeedb
+- Database: guitardb
 - Username: postgres
 - Password: 1234
 

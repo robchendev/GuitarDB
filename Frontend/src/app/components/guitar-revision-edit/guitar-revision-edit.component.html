@@ -1,0 +1,119 @@
+<div>
+  <form
+    [formGroup]="editGuitarForm"
+    (ngSubmit)="onEditGuitar()"
+    autocomplete="off"
+  >
+    <div>
+      <h1>GuitarDB</h1>
+      <h2>Edit Guitar Revision (Revision ID: {{ revisionId ?? "?" }})</h2>
+      <p>
+        You can modify your guitar revision while it hasn't been committed, a
+        moderator will review your changes and approve or reject it before the
+        change is fully committed.
+      </p>
+    </div>
+    <app-text-input
+      label="Name"
+      formControlName="name"
+      [errorMessages]="{
+        required: 'Please enter a name',
+        maxlength: 'Name must be at most 100 characters',
+      }"
+    />
+    <app-text-input
+      label="Alias"
+      formControlName="alias"
+      [errorMessages]="{
+        maxlength: 'Aliases combined must be at most 200 characters',
+      }"
+    />
+    <app-text-input
+      label="Location Address"
+      formControlName="locationAddress"
+      [errorMessages]="{
+        maxlength: 'Location address must be at most 200 characters',
+      }"
+    />
+    <app-text-input
+      label="Location Latitude"
+      formControlName="latitude"
+      type="number"
+      [errorMessages]="{
+        requireOtherMismatch:
+          'Latitude must be provided if longitude is provided.',
+        min: 'Latitude must be higher than or equal to -90.',
+        max: 'Latitude must be lower than or equal to 90.',
+      }"
+      [showErrors]="submitted"
+    />
+    <app-text-input
+      label="Location Longitude"
+      formControlName="longitude"
+      type="number"
+      [errorMessages]="{
+        requireOtherMismatch:
+          'Longitude must be provided if Latitude is provided.',
+        min: 'Longitude must be higher than or equal to -180.',
+        max: 'Longitude must be lower than or equal to 180.',
+      }"
+      [showErrors]="submitted"
+    />
+    <app-text-input
+      label="Website URL"
+      formControlName="websiteUrl"
+      [errorMessages]="{
+        maxlength: 'Website URL must be at most 300 characters',
+        pattern: 'Website URL must be valid and start with https:// or http://',
+      }"
+    />
+    <app-text-area
+      label="Description"
+      formControlName="description"
+      [errorMessages]="{
+        maxlength: 'Description must be at most 2000 characters',
+      }"
+    />
+    <div>
+      Description Length:
+      {{ editGuitarForm.get("description")?.value?.length || 0 }}/2000
+    </div>
+
+    <app-text-area
+      label="Comment (briefly describe why this change is needed)"
+      formControlName="comment"
+      [errorMessages]="{
+        required: 'Please enter a comment',
+        maxlength: 'Comment must be at most 300 characters',
+      }"
+      [rows]="4"
+    />
+    <div>
+      Comment Length:
+      {{ editGuitarForm.get("comment")?.value?.length || 0 }}/300
+    </div>
+
+    @if (validationErrors) {
+      <div>
+        @for (error of validationErrors; track $index) {
+          <p>Error: {{ validationErrors }}</p>
+        }
+      </div>
+    }
+
+    <div>
+      TODO: Navigate to revision page after finishing 
+    </div>
+    <div class="bottom-row">
+      <app-form-cta-button
+        text="Edit guitar revision"
+        variant="primary"
+        type="submit"
+        [disabled]="
+          loadingService.isLoadingId(`edit-guitar-${id}`) ||
+          getIsDataUnchanged()
+        "
+      />
+    </div>
+  </form>
+</div>

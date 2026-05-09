@@ -1,0 +1,33 @@
+<div class="tabs">
+  <a [routerLink]="['/guitars']">&lt;&lt; All Guitars</a>
+  @if (guitarsFrameService.guitarId()) {
+    <a
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      [routerLink]="['/guitars', guitarsFrameService.guitarId()]"
+    >
+      Details
+    </a>
+    <a
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      [routerLink]="['/guitars', guitarsFrameService.guitarId(), 'edit']"
+    >
+      Edit
+    </a>
+    <a
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      [routerLink]="[
+        '/guitars',
+        guitarsFrameService.guitarId(),
+        'revisions',
+      ]"
+    >
+      History
+    </a>
+  }
+</div>
+<div class="router-frame">
+  <router-outlet></router-outlet>
+</div>

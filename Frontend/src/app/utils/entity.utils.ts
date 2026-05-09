@@ -1,7 +1,7 @@
 export function getEntityBaseUrlFromEntityName(entityName: string) {
   switch (entityName) {
-    case 'Roaster':
-      return 'roasters';
+    case 'Guitar':
+      return 'guitars';
     default:
       console.error('Entity type not handled in user contributions!');
       return 'notfound';
@@ -10,8 +10,8 @@ export function getEntityBaseUrlFromEntityName(entityName: string) {
 
 export function getEntityBaseUrlFromEntityPath(entityPath: string) {
   switch (entityPath) {
-    case 'roasters':
-      return 'roasters';
+    case 'guitars':
+      return 'guitars';
     default:
       console.error('Entity type not handled in user contributions!');
       return 'notfound';

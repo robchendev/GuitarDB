@@ -1,0 +1,105 @@
+<h2>Guitars</h2>
+<ng-container *appAuth>
+  <button (click)="router.navigate(['/guitars/create'])">Add Guitar</button>
+</ng-container>
+<app-pagination-controls
+  [(page)]="paginationSignals.page.signal"
+  [(pageSize)]="paginationSignals.pageSize.signal"
+  [loadingId]="loadingKey"
+  [paginatedResult]="paginatedResultSignal()"
+/>
+@if (
+  !loadingService.isLoadingId(loadingKey) &&
+  !paginatedResultSignal()?.pagination
+) {
+  <p>Failed to load pagination data.</p>
+}
+<form [formGroup]="searchForm" (ngSubmit)="onSearchSubmit()" autocomplete="off">
+  <app-text-input
+    label="Name"
+    formControlName="name"
+    [errorMessages]="{
+      maxlength: 'Name cannot be more than 100 characters long.',
+    }"
+    [showErrors]="submitted()"
+  />
+  <app-text-input
+    label="Address"
+    formControlName="address"
+    [errorMessages]="{
+      maxlength: 'Address cannot be more than 200 characters long.',
+    }"
+    [showErrors]="submitted()"
+  />
+  <div class="coordinate-search">
+    <app-text-input
+      label="Latitude"
+      formControlName="lat"
+      type="number"
+      [errorMessages]="{
+        min: 'Latitude must be between -90 and 90.',
+        max: 'Latitude must be between -90 and 90.',
+      }"
+      [showErrors]="submitted()"
+    />
+    <app-text-input
+      label="Longitude"
+      formControlName="long"
+      type="number"
+      [errorMessages]="{
+        min: 'Longitude must be between -180 and 180.',
+        max: 'Longitude must be between -180 and 180.',
+      }"
+      [showErrors]="submitted()"
+    />
+    <app-text-input
+      label="Radius"
+      formControlName="radius"
+      type="number"
+      [errorMessages]="{
+        min: 'Minimum radius is 0.1km',
+        max: 'Maximum radius is 15000km',
+      }"
+      [showErrors]="submitted()"
+    />
+  </div>
+  @if (submitted() && coordinateGroupHasError) {
+    <app-error-text
+      text="Latitude, Longitude, and Radius must be provided together if one of them are provided."
+    />
+  }
+  <div>
+    <button>Search</button>
+    <button type="button" (click)="onResetSearch()">Reset</button>
+  </div>
+</form>
+@if (items()[0]) {
+  <table class="table">
+    <thead>
+      <tr>
+        <th style="width: 10%">ID</th>
+        <th style="width: 30%">Name</th>
+        <th style="width: 30%">Address</th>
+        @if (isDistanceProvided) {
+          <th style="width: 30%">Distance</th>
+        }
+      </tr>
+    </thead>
+    <tbody>
+      @for (guitar of items(); track guitar.id) {
+        <tr>
+          <td>{{ guitar.id }}</td>
+          <td>
+            <a [routerLink]="['/guitars', guitar.id]">{{ guitar.name }}</a>
+          </td>
+          <td>{{ guitar.locationAddress }}</td>
+          @if (isDistanceProvided) {
+            <td>{{ guitar.distanceInKilometers?.toFixed(2) }} km</td>
+          }
+        </tr>
+      }
+    </tbody>
+  </table>
+} @else if (!loadingService.isLoadingId(loadingKey) && !searchForm.pristine) {
+  <p>No guitars found for your search!</p>
+}

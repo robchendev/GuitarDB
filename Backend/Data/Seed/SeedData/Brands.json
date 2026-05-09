@@ -1,26 +1,17 @@
 [
   {
-    "Name": "Breville",
-    "Alias": "Sage",
-    "Description": null,
-    "Country": "Australia"
+    "Name": "Taylor Guitars",
+    "Description": "Taylor Guitars description here",
+    "CountryId": "us"
   },
   {
-    "Name": "HARIO",
-    "Alias": null,
+    "Name": "Martin Guitars",
     "Description": null,
-    "Country": "Japan"
+    "CountryId": "us"
   },
   {
-    "Name": "Aeropress",
-    "Alias": null,
-    "Description": null,
-    "Country": "United States of America"
-  },
-  {
-    "Name": "Turin",
-    "Alias": "Espresso Outlet",
-    "Description": null,
-    "Country": "Canada"
+    "Name": "Natasha Guitars",
+    "Description": "Dedicated to making pristine instruments since 2016, Natasha is a company that is keen on innovating and developing new ways around guitars. Whether it's material sustainability, or instrument playability, we welcome you to try our guitars for a great surprise.\nOur logo, a lowercase \"n\" gracefully entwined with a vibrant leaf, symbolizes the wood’s rebirth, divorced from the soil, and harmonizing uniquely with music, as we aspire to contribute our distinctive touch to the global guitar industry.",
+    "CountryId": "cn"
   }
 ]

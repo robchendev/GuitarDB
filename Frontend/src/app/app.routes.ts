@@ -12,47 +12,47 @@ import { LoremIpsumComponent } from './components/lorem-ipsum/lorem-ipsum.compon
 import { UserProfileComponent } from './components/users/user-profile/user-profile.component';
 import { adminGuard } from './guards/admin.guard';
 import { UserSettingsComponent } from './components/user-settings/user-settings.component';
-import { RoasterDirectoryComponent } from './components/roaster-directory/roaster-directory.component';
-import { RoasterDetailsComponent } from './components/roaster-details/roaster-details.component';
-import { RoasterCreateComponent } from './components/roaster-create/roaster-create.component';
-import { RoasterEditComponent } from './components/roaster-edit/roaster-edit.component';
+import { GuitarDirectoryComponent } from './components/guitar-directory/guitar-directory.component';
+import { GuitarDetailsComponent } from './components/guitar-details/guitar-details.component';
+import { GuitarCreateComponent } from './components/guitar-create/guitar-create.component';
+import { GuitarEditComponent } from './components/guitar-edit/guitar-edit.component';
 import { UserManagerComponent } from './components/admin/user-manager/user-manager.component';
-import { RoasterManagerComponent } from './components/admin/roaster-manager/roaster-manager.component';
-import { RoasterRevisionComponent } from './components/roaster-revision/roaster-revision.component';
+import { GuitarManagerComponent } from './components/admin/guitar-manager/guitar-manager.component';
+import { GuitarRevisionComponent } from './components/guitar-revision/guitar-revision.component';
 import { RevisionHistoryComponent } from './components/revision-history/revision-history.component';
-import { RoasterFrameComponent } from './components/roaster-frame/roaster-frame.component';
+import { GuitarFrameComponent } from './components/guitar-frame/guitar-frame.component';
 import { UserFrameComponent } from './components/user-frame/user-frame.component';
 import { UserContributionsComponent } from './components/user-contributions/user-contributions.component';
 import { UserRevisionsComponent } from './components/user-revisions/user-revisions.component';
 import { isUserGuard } from './guards/is-user.guard';
-import { RoasterRevisionEditComponent } from './components/roaster-revision-edit/roaster-revision-edit.component';
+import { GuitarRevisionEditComponent } from './components/guitar-revision-edit/guitar-revision-edit.component';
 
 export const routes: Routes = [
   {
     path: '',
     component: MainframeComponent,
     children: [
-      { path: 'roasters', component: RoasterDirectoryComponent },
+      { path: 'guitars', component: GuitarDirectoryComponent },
       {
-        path: 'roasters/create',
-        component: RoasterCreateComponent,
+        path: 'guitars/create',
+        component: GuitarCreateComponent,
         canActivate: [signedInGuard],
       },
       {
-        path: 'roasters/:id',
-        component: RoasterFrameComponent,
+        path: 'guitars/:id',
+        component: GuitarFrameComponent,
         children: [
           {
             path: 'revisions/:revisionId/edit',
-            component: RoasterRevisionEditComponent,
+            component: GuitarRevisionEditComponent,
           },
           {
             path: 'revisions/:revisionId1/:revisionId2',
-            component: RoasterRevisionComponent,
+            component: GuitarRevisionComponent,
           },
           {
             path: 'revisions/:revisionId1',
-            component: RoasterRevisionComponent,
+            component: GuitarRevisionComponent,
           },
           {
             path: 'revisions',
@@ -60,10 +60,10 @@ export const routes: Routes = [
           },
           {
             path: 'edit',
-            component: RoasterEditComponent,
+            component: GuitarEditComponent,
             canActivate: [signedInGuard],
           },
-          { path: '', component: RoasterDetailsComponent },
+          { path: '', component: GuitarDetailsComponent },
         ],
       },
       { path: 'not-found', component: NotFoundComponent },
@@ -102,7 +102,7 @@ export const routes: Routes = [
     component: MainframeComponent,
     canActivateChild: [adminGuard],
     children: [
-      { path: 'roasters', component: RoasterManagerComponent },
+      { path: 'guitars', component: GuitarManagerComponent },
       { path: 'users', component: UserManagerComponent },
       { path: 'server-error', component: ServerErrorComponent },
       { path: '**', component: EmptyComponent, pathMatch: 'full' },

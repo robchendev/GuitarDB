@@ -34,14 +34,14 @@ public static class ApplicationServiceExtensions
     // Dependency Injection Registration
     services.AddScoped<IUnitOfWork, UnitOfWork>();
     services.AddScoped<IUserRepository, UserRepository>();
-    services.AddScoped<IRoasterRepository, RoasterRepository>();
+    services.AddScoped<IGuitarRepository, GuitarRepository>();
     services.AddScoped<IRevisionMetadataRepository, RevisionMetadataRepository>();
 
     services.AddScoped<ITokenService, TokenService>(); // create once per http request
     services.AddScoped<IUserService, UserService>();
     services.AddScoped<IAccountService, AccountService>();
     services.AddScoped<IAdminService, AdminService>();
-    services.AddScoped<IRoasterService, RoasterService>();
+    services.AddScoped<IGuitarService, GuitarService>();
     services.AddScoped<IRevisionMetadataService, RevisionMetadataService>();
 
     // API Documentation
@@ -49,7 +49,7 @@ public static class ApplicationServiceExtensions
     {
       c.SwaggerDoc("v1", new OpenApiInfo
       {
-        Title = "CoffeeDB API",
+        Title = "GuitarDB API",
         Version = "v1"
       });
       c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()

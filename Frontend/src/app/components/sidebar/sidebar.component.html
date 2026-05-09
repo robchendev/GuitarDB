@@ -6,7 +6,7 @@
 <nav class="sidebar" [class.open]="sidebarService.isOpen()">
   <div class="start">
     <app-menu-button (menuClick)="sidebarService.close()" />
-    <h1>CoffeeDB</h1>
+    <h1>GuitarDB</h1>
   </div>
   <div class="center">
     <ul>
@@ -14,8 +14,8 @@
       <app-link-button routerLink="/users" [icon]="usersIcon">
         Users
       </app-link-button>
-      <app-link-button routerLink="/roasters" [icon]="roasterIcon">
-        Roasters
+      <app-link-button routerLink="/guitars" [icon]="guitarIcon">
+        Guitars
       </app-link-button>
       <app-link-button routerLink="/restricted" [icon]="shieldIcon">
         Restricted
@@ -42,8 +42,8 @@
         <app-link-button routerLink="/admin/users" [icon]="userManagerIcon">
           User Manager
         </app-link-button>
-        <app-link-button routerLink="/admin/roasters" [icon]="placeholderIcon">
-          Roaster Manager
+        <app-link-button routerLink="/admin/guitars" [icon]="placeholderIcon">
+          Guitar Manager
         </app-link-button>
       </ul>
     </div>

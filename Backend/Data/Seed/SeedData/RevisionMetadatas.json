@@ -9,18 +9,30 @@
     "Status": 2,
     "ParentRevisionId": 1,
     "Version": null,
-    "Comment": "Swapped House of Funk with FUNK Coffee in name and alias"
+    "Comment": "Taylor 114ce changed description, though still nonsense"
   },
   {
     "Status": 2,
     "ParentRevisionId": 1,
     "Version": null,
-    "Comment": "I Don't Know!"
+    "Comment": "Taylor 114ce changed description, though still nonsense 2"
   },
   {
+    "Status": 2,
     "ParentRevisionId": null,
+    "Version": null,
+    "Comment": "Martin GPCPA5 new entry Pending"
+  },
+  {
     "Status": 4,
+    "ParentRevisionId": null,
     "Version": 1,
-    "Comment": "Initial version"
+    "Comment": "Natasha JC43 committed"
+  },
+  {
+    "Status": 4,
+    "ParentRevisionId": null,
+    "Version": 1,
+    "Comment": "Luthier example revision, initial committed version"
   }
 ]

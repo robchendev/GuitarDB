@@ -1,6 +1,7 @@
 using Backend.Data;
 using Backend.Data.Seed;
 using Backend.Entities;
+using Backend.Entities.Catalog;
 using Backend.Entities.Revision;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -23,24 +24,15 @@ public static class HostExtensions
       // seed mock data into tables
       await Seed.SeedTable<RevisionMetadata>(context, "RevisionMetadatas.json");
       await Seed.SeedUsers(userManager, roleManager);
-      await Seed.SeedRoasters(context, "Roasters.json");
-      await Seed.SeedRoasterRevisions(context, "RoasterRevisions.json");
+      // I think these are only needed instead of SeedTable because they had special geospatial data handling logic
+      // await Seed.SeedGuitars(context, "Guitars.json");
+      // await Seed.SeedGuitarRevisions(context, "GuitarRevisions.json");
+      await Seed.SeedTable<Country>(context, "Countries.json");
       await Seed.SeedTable<Brand>(context, "Brands.json");
-      await Seed.SeedTable<Bean>(context, "Beans.json");
-      await Seed.SeedTable<BeanBatch>(context, "BeanBatches.json");
-      await Seed.SeedTable<BrewMethod>(context, "BrewMethods.json");
-      await Seed.SeedTable<Brewer>(context, "Brewers.json");
-      await Seed.SeedTable<BrewerStockSetting>(context, "BrewerStockSettings.json");
-      await Seed.SeedTable<BrewerUserSetting>(context, "BrewerUserSettings.json");
-      await Seed.SeedTable<Grinder>(context, "Grinders.json");
-      await Seed.SeedTable<GrinderDial>(context, "GrinderDials.json");
-      await Seed.SeedTable<GrindingMechanism>(context, "GrindingMechanisms.json");
-      await Seed.SeedTable<GrindingElement>(context, "GrindingElements.json");
-      await Seed.SeedTable<GrinderElementCompatibility>(context, "GrinderElementCompatibilities.json");
-      await Seed.SeedTable<BrewSetup>(context, "BrewSetups.json");
-      await Seed.SeedTable<UserBrewSetup>(context, "UserBrewSetups.json");
-      await Seed.SeedTable<BrewSetting>(context, "BrewSettings.json");
-      await Seed.SeedTable<BrewGrinderDialSetting>(context, "BrewGrinderDialSettings.json");
+      await Seed.SeedTable<Guitar>(context, "Guitars.json");
+      await Seed.SeedTable<GuitarRevision>(context, "GuitarRevisions.json");
+      await Seed.SeedTable<Luthier>(context, "Luthiers.json");
+      await Seed.SeedTable<LuthierRevision>(context, "LuthierRevisions.json");
     }
     catch (Exception ex)
     {

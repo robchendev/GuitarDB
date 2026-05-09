@@ -1,11 +1,11 @@
 import { Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { RevisionMetadataExcerpt } from '../../models/revision';
-import { RoastersService } from '../../services/roasters.service';
+import { GuitarsService } from '../../services/guitars.service';
 import { getReadableDate } from '../../utils/date.utils';
 import { HttpResponse } from '@angular/common/http';
 import { getEntityBaseUrlFromEntityPath } from '../../utils/entity.utils';
-import { RoastersFrameService } from '../../services/roaster-frame.service';
+import { GuitarsFrameService } from '../../services/guitar-frame.service';
 import { PaginationControlsComponent } from '../pagination-controls/pagination-controls.component';
 import { createPaginationSignals, FormKeyMap } from '../../utils/params.utils';
 import { PaginatedDirectoryComponent } from '../abstract/paginated-directory/paginated-directory.component';
@@ -23,14 +23,14 @@ import { PaginatedResult } from '../../models/pagination';
 })
 export class RevisionHistoryComponent extends PaginatedDirectoryComponent<
   RevisionMetadataExcerpt,
-  RoastersService
+  GuitarsService
 > {
-  protected service = inject(RoastersService);
+  protected service = inject(GuitarsService);
   protected items = signal<RevisionMetadataExcerpt[]>([]);
   protected loadingKey = '';
   protected formKeyMap: FormKeyMap = {}; // intentionally empty
 
-  roastersFrameService = inject(RoastersFrameService);
+  guitarsFrameService = inject(GuitarsFrameService);
   entityId?: number;
   entityPath?: string;
   entityName?: string;
@@ -39,7 +39,7 @@ export class RevisionHistoryComponent extends PaginatedDirectoryComponent<
   constructor() {
     super();
 
-    // This component can be part of any Roaster/Grinder/etc frame, so get generic id instead of relying on Entity Frames
+    // This component can be part of any Guitar/Grinder/etc frame, so get generic id instead of relying on Entity Frames
     const id = Number(this.route.parent?.snapshot.paramMap.get('id'));
     if (id === undefined || isNaN(id)) return;
 
@@ -62,8 +62,8 @@ export class RevisionHistoryComponent extends PaginatedDirectoryComponent<
   protected fetchPaginatedItems() {
     if (!this.entityId) return;
     switch (this.entityPath) {
-      case 'roasters':
-        return this.service.getRoasterRevisionMetadataExcerpts(
+      case 'guitars':
+        return this.service.getGuitarRevisionMetadataExcerpts(
           {
             page: this.paginationSignals.page.signal(),
             pageSize: this.paginationSignals.pageSize.signal(),
@@ -82,7 +82,7 @@ export class RevisionHistoryComponent extends PaginatedDirectoryComponent<
     result: PaginatedResult<RevisionMetadataExcerpt[]>,
   ) {
     if (!res) return;
-    this.entityName = res.headers.get('Roaster-Name') || '';
+    this.entityName = res.headers.get('Guitar-Name') || '';
   }
 
   get coordinateGroupHasError(): boolean {
