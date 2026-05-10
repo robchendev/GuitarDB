@@ -1,5 +1,5 @@
 <div class="tabs">
-  <a [routerLink]="['/guitars']">&lt;&lt; All Guitars</a>
+  <a [routerLink]="['/guitars']">All Guitars</a>
   @if (guitarsFrameService.guitarId()) {
     <a
       routerLinkActive="active"
@@ -18,11 +18,7 @@
     <a
       routerLinkActive="active"
       [routerLinkActiveOptions]="{ exact: true }"
-      [routerLink]="[
-        '/guitars',
-        guitarsFrameService.guitarId(),
-        'revisions',
-      ]"
+      [routerLink]="['/guitars', guitarsFrameService.guitarId(), 'revisions']"
     >
       History
     </a>

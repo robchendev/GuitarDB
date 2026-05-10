@@ -15,7 +15,6 @@ import { SimpleModalComponent } from '../../modal/modal.component';
     TextInputComponent,
     PaginationControlsComponent,
     ReactiveFormsModule,
-    ErrorTextComponent,
     RouterLink,
     SimpleModalComponent,
   ],

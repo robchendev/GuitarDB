@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class initialcreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -271,6 +271,7 @@ namespace Backend.Migrations
                     parent_revision_id = table.Column<int>(type: "integer", nullable: true),
                     version = table.Column<int>(type: "integer", nullable: true),
                     comment = table.Column<string>(type: "text", nullable: false),
+                    iteration = table.Column<int>(type: "integer", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     created_by_id = table.Column<int>(type: "integer", nullable: true),
@@ -413,7 +414,8 @@ namespace Backend.Migrations
                         name: "fk_guitars_luthiers_luthier_id",
                         column: x => x.luthier_id,
                         principalTable: "luthiers",
-                        principalColumn: "id");
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "fk_guitars_material_constructions_back_material_construction_id",
                         column: x => x.back_material_construction_id,
@@ -527,31 +529,31 @@ namespace Backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "luthier_revision",
+                name: "luthier_revisions",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false),
-                    luthier_id = table.Column<int>(type: "integer", nullable: false),
+                    luthier_id = table.Column<int>(type: "integer", nullable: true),
                     name = table.Column<string>(type: "text", nullable: false),
                     description = table.Column<string>(type: "text", nullable: true),
                     country_id = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_luthier_revision", x => x.id);
+                    table.PrimaryKey("pk_luthier_revisions", x => x.id);
                     table.ForeignKey(
-                        name: "fk_luthier_revision_countries_country_id",
+                        name: "fk_luthier_revisions_countries_country_id",
                         column: x => x.country_id,
                         principalTable: "countries",
                         principalColumn: "id");
                     table.ForeignKey(
-                        name: "fk_luthier_revision_luthiers_luthier_id",
+                        name: "fk_luthier_revisions_luthiers_luthier_id",
                         column: x => x.luthier_id,
                         principalTable: "luthiers",
                         principalColumn: "id",
                         onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
-                        name: "fk_luthier_revision_revision_metadatas_id",
+                        name: "fk_luthier_revisions_revision_metadatas_id",
                         column: x => x.id,
                         principalTable: "revision_metadatas",
                         principalColumn: "id",
@@ -1138,13 +1140,13 @@ namespace Backend.Migrations
                 column: "top_material_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_luthier_revision_country_id",
-                table: "luthier_revision",
+                name: "ix_luthier_revisions_country_id",
+                table: "luthier_revisions",
                 column: "country_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_luthier_revision_luthier_id",
-                table: "luthier_revision",
+                name: "ix_luthier_revisions_luthier_id",
+                table: "luthier_revisions",
                 column: "luthier_id");
 
             migrationBuilder.CreateIndex(
@@ -1215,7 +1217,7 @@ namespace Backend.Migrations
                 name: "guitar_revisions");
 
             migrationBuilder.DropTable(
-                name: "luthier_revision");
+                name: "luthier_revisions");
 
             migrationBuilder.DropTable(
                 name: "sound_profile_votes");

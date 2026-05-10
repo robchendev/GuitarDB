@@ -20,6 +20,7 @@ public class RevisionMetadataRepository(DataContext context) : IRevisionMetadata
         Id = rm.Id,
         Status = rm.Status.ToString(),
         ParentRevisionId = rm.ParentRevisionId,
+        Iteration = rm.Iteration,
         Version = rm.Version,
         Comment = rm.Comment,
         EntityType =
@@ -97,7 +98,8 @@ public class RevisionMetadataRepository(DataContext context) : IRevisionMetadata
       ParentRevisionId = parentRevisionId,
       Comment = comment,
       CreatedAt = DateTime.UtcNow,
-      CreatedById = userId
+      CreatedById = userId,
+      Iteration = 1
     };
 
     context.RevisionMetadatas.Add(revisionMetadata);
@@ -116,6 +118,7 @@ public class RevisionMetadataRepository(DataContext context) : IRevisionMetadata
     revisionMetadata.Comment = comment;
     revisionMetadata.UpdatedAt = DateTime.UtcNow;
     revisionMetadata.UpdatedById = userId;
+    revisionMetadata.Iteration++;
 
     return revisionMetadata;
   }

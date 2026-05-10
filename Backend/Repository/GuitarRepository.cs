@@ -21,7 +21,12 @@ public class GuitarRepository(DataContext context) : IGuitarRepository
       {
         Id = g.Id,
         Name = g.Name,
-        Description = g.Description
+        Description = g.Description,
+        Luthier = g.Luthier == null ? null : new LuthierExerptDto
+        {
+          Id = g.Luthier.Id,
+          Name = g.Luthier.Name
+        }
       })
       .SingleOrDefaultAsync();
   }
@@ -54,6 +59,7 @@ public class GuitarRepository(DataContext context) : IGuitarRepository
     {
       Name = guitarRevision.Name,
       Description = guitarRevision.Description,
+      LuthierId = guitarRevision.LuthierId
     };
 
     context.Guitars.Add(guitar);
@@ -72,6 +78,7 @@ public class GuitarRepository(DataContext context) : IGuitarRepository
 
     guitar.Name = guitarRevision.Name;
     guitar.Description = guitarRevision.Description;
+    guitar.LuthierId = guitarRevision.LuthierId;
 
     return guitar;
   }
@@ -90,12 +97,13 @@ public class GuitarRepository(DataContext context) : IGuitarRepository
   }
 
   // TODO: Add logic to check if guitar exists via name + luthier or name + brand 
-  public async Task<bool> GuitarExistsAsync(string name, int? excludeId = null)
+  public async Task<bool> GuitarExistsAsync(string name, int? brandId = null, int? luthierId = null, int? excludeId = null)
   {
     string normalizedName = name.ToLower();
 
     var query = context.Guitars.Where(g =>
-      g.Name.ToLower() == normalizedName
+      g.Name.ToLower() == normalizedName &&
+      (brandId == g.BrandId || luthierId == g.LuthierId)
     );
 
     if (excludeId.HasValue)
@@ -164,6 +172,7 @@ public class GuitarRepository(DataContext context) : IGuitarRepository
         .ThenInclude(rm => rm.CreatedBy)
       .Include(g => g.RevisionMetadata)
         .ThenInclude(rm => rm.UpdatedBy)
+      .Include(g => g.Luthier)
       .Where(gr => gr.Id == revisionId)
       .Select(gr => new
       {
@@ -185,9 +194,15 @@ public class GuitarRepository(DataContext context) : IGuitarRepository
       Version = gr.Revision.RevisionMetadata.Version,
       GuitarId = gr.Revision.GuitarId,
       ParentRevisionId = gr.Revision.RevisionMetadata.ParentRevisionId,
+      Iteration = gr.Revision.RevisionMetadata.Iteration,
       Status = gr.Revision.RevisionMetadata.Status.ToString(),
       Name = gr.Revision.Name,
       Description = gr.Revision.Description,
+      Luthier = gr.Revision.Luthier == null ? null : new LuthierExerptDto
+      {
+        Id = gr.Revision.Luthier.Id,
+        Name = gr.Revision.Luthier.Name
+      },
       Comment = gr.Revision.RevisionMetadata.Comment,
       CreatedAt = gr.Revision.RevisionMetadata.CreatedAt,
       UpdatedAt = gr.Revision.RevisionMetadata.UpdatedAt,
@@ -227,6 +242,7 @@ public class GuitarRepository(DataContext context) : IGuitarRepository
       GuitarId = null,
       Name = createGuitarRevisionDto.Name,
       Description = string.IsNullOrWhiteSpace(createGuitarRevisionDto.Description) ? null : createGuitarRevisionDto.Description,
+      LuthierId = createGuitarRevisionDto.LuthierId
     };
 
     context.GuitarRevisions.Add(guitarRevision);
@@ -241,6 +257,7 @@ public class GuitarRepository(DataContext context) : IGuitarRepository
       GuitarId = guitarId,
       Name = createGuitarRevisionDto.Name,
       Description = string.IsNullOrWhiteSpace(createGuitarRevisionDto.Description) ? null : createGuitarRevisionDto.Description,
+      LuthierId = createGuitarRevisionDto.LuthierId
     };
 
     context.GuitarRevisions.Add(guitarRevision);
@@ -258,6 +275,7 @@ public class GuitarRepository(DataContext context) : IGuitarRepository
 
     guitarRevision.Name = createGuitarRevisionDto.Name;
     guitarRevision.Description = createGuitarRevisionDto.Description;
+    guitarRevision.LuthierId = createGuitarRevisionDto.LuthierId;
 
     return guitarRevision;
   }

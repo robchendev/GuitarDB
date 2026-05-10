@@ -47,9 +47,11 @@ public interface IGuitarRepository
   /// Checks if a guitar exists
   /// </summary>
   /// <param name="name">The name of the guitar.</param>
+  /// <param name="brandId">The brand ID of the guitar.</param>
+  /// <param name="luthierId">The luthier ID the guitar.</param>
   /// <param name="excludeId">The ID of the guitar to exclude from the check.</param>
-  /// <returns><c>true</c> if guitar of matching name and location address found; otherwise, <c>false</c>.</returns>
-  Task<bool> GuitarExistsAsync(string name, int? excludeId = null);
+  /// <returns><c>true</c> if guitar of matching name+brand or name+luthier found; otherwise, <c>false</c>.</returns>
+  Task<bool> GuitarExistsAsync(string name, int? brandId = null, int? luthierId = null, int? excludeId = null);
 
   /// <summary>
   /// Checks if a guitar with the ID exists.

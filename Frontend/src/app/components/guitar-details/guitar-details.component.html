@@ -2,17 +2,7 @@
   <h1>{{ guitarsFrameService.guitar()?.name }}</h1>
   <p>ID: {{ guitarsFrameService.guitar()?.id }}</p>
   <p>Name: {{ guitarsFrameService.guitar()?.name }}</p>
-  <p>Alias: {{ guitarsFrameService.guitar()?.alias }}</p>
-  <p>Location Address: {{ guitarsFrameService.guitar()?.locationAddress }}</p>
-  <p>
-    Latitude:
-    {{ guitarsFrameService.guitar()?.locationCoordinates?.latitude }}
-  </p>
-  <p>
-    Longitude:
-    {{ guitarsFrameService.guitar()?.locationCoordinates?.longitude }}
-  </p>
-  <p>Website: {{ guitarsFrameService.guitar()?.websiteUrl }}</p>
+  <p>Luthier: {{ guitarsFrameService.guitar()?.luthier?.name }}</p>
   <p>Description:</p>
   <div class="description">
     @for (paragraph of descriptionParagraphs; track $index) {

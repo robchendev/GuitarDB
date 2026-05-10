@@ -61,6 +61,11 @@ public class GuitarService(IUnitOfWork unitOfWork) : IGuitarService
       Status = revisionMetadata.Status.ToString(),
       Name = guitarRevision.Name,
       Description = guitarRevision.Description,
+      Luthier = guitarRevision.Luthier == null ? null : new LuthierExerptDto
+      {
+        Id = guitarRevision.Luthier.Id,
+        Name = guitarRevision.Luthier.Name
+      }
     };
 
     return ServiceResult<GuitarRevisionSnapshotDto>.Success(200, guitarRevisionSnapshotDto);
@@ -73,13 +78,11 @@ public class GuitarService(IUnitOfWork unitOfWork) : IGuitarService
     if (currentGuitar == null)
       return ServiceResult<GuitarRevisionSnapshotDto>.Failure(400, $"Guitar ID '{id}' does not exist");
 
-    if (!string.IsNullOrWhiteSpace(createGuitarRevisionDto.Name))
-    {
-      if (await unitOfWork.GuitarRepository.GuitarExistsAsync(createGuitarRevisionDto.Name, id))
-      {
-        return ServiceResult<GuitarRevisionSnapshotDto>.Failure(400, $"Guitar '{createGuitarRevisionDto.Name}' already exists.");
-      }
-    }
+    if (!string.IsNullOrWhiteSpace(createGuitarRevisionDto.Name) && await unitOfWork.GuitarRepository.GuitarExistsAsync(createGuitarRevisionDto.Name, null, id))
+      return ServiceResult<GuitarRevisionSnapshotDto>.Failure(400, $"Guitar '{createGuitarRevisionDto.Name}' already exists.");
+
+    if (createGuitarRevisionDto.LuthierId != null && await unitOfWork.LuthierRepository.LuthierExistsByIdAsync(createGuitarRevisionDto.LuthierId.Value))
+      return ServiceResult<GuitarRevisionSnapshotDto>.Failure(400, $"Luthier ID {createGuitarRevisionDto.LuthierId} does not exist.");
 
     // Should make a revision, not update guitar.
     // CreateGuitarRevisionAsync will be used when revision is approved and committed
@@ -87,6 +90,7 @@ public class GuitarService(IUnitOfWork unitOfWork) : IGuitarService
 
     bool hasChanges =
       currentGuitar.Name != createGuitarRevisionDto.Name ||
+      currentGuitar.Luthier?.Id != createGuitarRevisionDto.LuthierId ||
       currentGuitar.Description != createGuitarRevisionDto.Description;
 
     if (!hasChanges)
@@ -122,6 +126,11 @@ public class GuitarService(IUnitOfWork unitOfWork) : IGuitarService
       ParentRevisionId = revisionMetadata.ParentRevisionId,
       Name = guitarRevision.Name,
       Description = guitarRevision.Description,
+      Luthier = guitarRevision.Luthier == null ? null : new LuthierExerptDto
+      {
+        Id = guitarRevision.Luthier.Id,
+        Name = guitarRevision.Luthier.Name
+      }
     };
 
     return ServiceResult<GuitarRevisionSnapshotDto>.Success(200, guitarRevisionSnapshotDto);
@@ -163,6 +172,7 @@ public class GuitarService(IUnitOfWork unitOfWork) : IGuitarService
 
     bool hasChangesCurrentGuitarToRevisionDto = currentGuitar == null ||
       currentGuitar.Name != createGuitarRevisionDto.Name ||
+      currentGuitar.Luthier?.Id != createGuitarRevisionDto.LuthierId ||
       currentGuitar.Description != createGuitarRevisionDto.Description;
 
     if (!hasChangesCurrentGuitarToRevisionDto)
@@ -170,6 +180,7 @@ public class GuitarService(IUnitOfWork unitOfWork) : IGuitarService
 
     bool hasChangesCurrentRevisionToRevisionDto =
       revisionSnapshot.Name != createGuitarRevisionDto.Name ||
+      revisionSnapshot.Luthier?.Id != createGuitarRevisionDto.LuthierId ||
       revisionSnapshot.Description != createGuitarRevisionDto.Description;
 
     if (!hasChangesCurrentRevisionToRevisionDto)
@@ -182,6 +193,9 @@ public class GuitarService(IUnitOfWork unitOfWork) : IGuitarService
     var revisionMetadata = await unitOfWork.RevisionMetadataRepository.UpdateRevisionMetadataAsync(revisionId, createGuitarRevisionDto.Comment, userId);
     if (revisionMetadata == null)
       return ServiceResult<GuitarRevisionSnapshotDto>.Failure(400, $"Revision Metadata ID '{revisionId}' does not exist.");
+
+    if (guitarRevision.LuthierId != null && await unitOfWork.LuthierRepository.LuthierExistsByIdAsync(guitarRevision.LuthierId.Value))
+      return ServiceResult<GuitarRevisionSnapshotDto>.Failure(400, $"Luthier ID {guitarRevision.LuthierId} does not exist.");
 
     if (!await unitOfWork.SaveAllAsync())
       return ServiceResult<GuitarRevisionSnapshotDto>.Failure(500, $"Could not update Guitar Revision '{revisionId}'.");
@@ -196,6 +210,11 @@ public class GuitarService(IUnitOfWork unitOfWork) : IGuitarService
       ParentRevisionId = guitarRevision.RevisionMetadata.ParentRevisionId,
       Name = guitarRevision.Name,
       Description = guitarRevision.Description,
+      Luthier = guitarRevision.Luthier == null ? null : new LuthierExerptDto
+      {
+        Id = guitarRevision.Luthier.Id,
+        Name = guitarRevision.Luthier.Name
+      },
       CreatedAt = guitarRevision.RevisionMetadata.CreatedAt,
       CreatedBy = guitarRevision.RevisionMetadata.CreatedBy?.UserName,
       CreatedById = guitarRevision.RevisionMetadata.CreatedBy?.Id,
@@ -258,39 +277,39 @@ public class GuitarService(IUnitOfWork unitOfWork) : IGuitarService
     return ServiceResult<GuitarRevisionSnapshotDto>.Success(200, guitarRevision);
   }
 
-  public async Task<ServiceResult<GuitarRevisionDiffDto>> GetGuitarRevisionDiffAsync(int revisionId1, int revisionId2, int guitarId, ClaimsPrincipal user)
+  public async Task<ServiceResult<RevisionDiffDto>> GetGuitarRevisionDiffAsync(int revisionId1, int revisionId2, int guitarId, ClaimsPrincipal user)
   {
     if (revisionId1 == revisionId2)
-      return ServiceResult<GuitarRevisionDiffDto>.Failure(400, $"Guitar Revision ID '{revisionId1}' cannot be compared with itself");
+      return ServiceResult<RevisionDiffDto>.Failure(400, $"Guitar Revision ID '{revisionId1}' cannot be compared with itself");
 
     var userIsModerator = user.IsInRole("Moderator") == true;
     int? userId = UserClaimsUtils.GetUserIdOrNull(user);
 
     var guitarRevision1 = await unitOfWork.GuitarRepository.GetGuitarRevisionSnapshotAsync(revisionId1, userIsModerator, userId);
     if (guitarRevision1 == null)
-      return ServiceResult<GuitarRevisionDiffDto>.Failure(400, $"Guitar Revision ID '{revisionId1}' not found or user has no access.");
+      return ServiceResult<RevisionDiffDto>.Failure(400, $"Guitar Revision ID '{revisionId1}' not found or user has no access.");
 
     var guitarRevision2 = await unitOfWork.GuitarRepository.GetGuitarRevisionSnapshotAsync(revisionId2, userIsModerator, userId);
     if (guitarRevision2 == null)
-      return ServiceResult<GuitarRevisionDiffDto>.Failure(400, $"Guitar Revision ID '{revisionId2}' not found or user has no access.");
+      return ServiceResult<RevisionDiffDto>.Failure(400, $"Guitar Revision ID '{revisionId2}' not found or user has no access.");
 
     // must check if the revisions are actually for the same guitar
     if (guitarRevision1.GuitarId != guitarRevision2.GuitarId)
-      return ServiceResult<GuitarRevisionDiffDto>.Failure(400, $"Guitar Revision IDs {guitarRevision1.Id} and {guitarRevision2.Id} belong to different guitars");
+      return ServiceResult<RevisionDiffDto>.Failure(400, $"Guitar Revision IDs {guitarRevision1.Id} and {guitarRevision2.Id} belong to different guitars");
 
     bool rev1Older = guitarRevision1.CreatedAt <= guitarRevision2.CreatedAt;
     var diff = CalculateDiff(rev1Older ? guitarRevision1 : guitarRevision2, rev1Older ? guitarRevision2 : guitarRevision1);
 
-    return ServiceResult<GuitarRevisionDiffDto>.Success(200, diff);
+    return ServiceResult<RevisionDiffDto>.Success(200, diff);
   }
 
-  private static GuitarRevisionDiffDto CalculateDiff(GuitarRevisionSnapshotDto oldRevision, GuitarRevisionSnapshotDto newRevision)
+  private static RevisionDiffDto CalculateDiff(GuitarRevisionSnapshotDto oldRevision, GuitarRevisionSnapshotDto newRevision)
   {
     // if the guitar is initial version, then it wont have an ID.
     // but since guitar is initial version, there wont be two revisions of it to compare to.
     // we should never be able to get to this point if theres only an initial guitar revision,
     // so I'm suppressing the nullable warning 
-    var diff = new GuitarRevisionDiffDto { GuitarId = oldRevision.GuitarId!.Value };
+    var diff = new RevisionDiffDto { EntityId = oldRevision.GuitarId!.Value };
 
     // Add basic properties
     diff.Changes["id"] = new Change { Old = oldRevision.Id, New = newRevision.Id };
@@ -306,6 +325,24 @@ public class GuitarService(IUnitOfWork unitOfWork) : IGuitarService
     if (oldRevision.Description != newRevision.Description)
       diff.Changes["description"] = new Change { Old = oldRevision.Description, New = newRevision.Description };
 
+    if (oldRevision.Luthier?.Id != newRevision.Luthier?.Id)
+      diff.Changes["luthier"] = new Change
+      {
+        Old = oldRevision.Luthier == null ? null : new LuthierExerptDto
+        {
+          Id = oldRevision.Luthier.Id,
+          Name = oldRevision.Luthier.Name
+        },
+
+        New = newRevision.Luthier == null ? null : new LuthierExerptDto
+        {
+          Id = newRevision.Luthier.Id,
+          Name = newRevision.Luthier.Name
+        }
+      };
+
+    diff.Iteration = newRevision.Iteration;
+
     return diff;
   }
 
@@ -313,7 +350,7 @@ public class GuitarService(IUnitOfWork unitOfWork) : IGuitarService
   // is the revision in GuitarRevisions? BrewerRevisions? Idk! 
   // I can get the RevisionMetadata, but that tells me nothing about the EntityType (Guitar, Grinder, etc)
 
-  public async Task<ServiceResult<GuitarDto>> ApproveCreateGuitarRevisionAsync(int revisionId, ClaimsPrincipal userClaims)
+  public async Task<ServiceResult<GuitarDto>> ApproveCreateGuitarRevisionAsync(int revisionId, int iteration, ClaimsPrincipal userClaims)
   {
     var revisionMetadata = await unitOfWork.RevisionMetadataRepository.GetRevisionMetadataAsync(revisionId);
     if (revisionMetadata == null)
@@ -321,6 +358,9 @@ public class GuitarService(IUnitOfWork unitOfWork) : IGuitarService
 
     if (revisionMetadata.Status != RevisionStatus.Pending.ToString())
       return ServiceResult<GuitarDto>.Failure(403, $"Cannot approve Entity Revision ID '{revisionId}' because its status is not 'Pending'.");
+
+    if (revisionMetadata.Iteration != iteration)
+      return ServiceResult<GuitarDto>.Failure(409, $"Cannot approve Entity Revision ID '{revisionId}' because it has changed since the approved review was loaded.");
 
     var parentRevisionId = revisionMetadata.ParentRevisionId;
     if (parentRevisionId != null)
@@ -338,14 +378,6 @@ public class GuitarService(IUnitOfWork unitOfWork) : IGuitarService
     {
       return ServiceResult<GuitarDto>.Failure(400, $"Guitar '{guitarRevision.Name}' already exists");
     }
-
-    // TODO: implement this by passing in the revision data that the moderator has approved
-    // Ideally, users should only be able to delete / create revisions. Never update.
-    // bool hasChangesCurrentRevisionToApprovedRevision =
-    //   createGuitarRevisionDto.Name != revisionSnapshot.Name ||
-    //   createGuitarRevisionDto.Description != revisionSnapshot.Description;
-    // if (hasChangesCurrentRevisionToApprovedRevision)
-    //   return ServiceResult<GuitarRevisionSnapshotDto>.Failure(400, $"Changes detected in approved version vs current version of revision. Re-review and approval needed.");
 
     var userId = UserClaimsUtils.GetUserId(userClaims);
 
@@ -365,12 +397,17 @@ public class GuitarService(IUnitOfWork unitOfWork) : IGuitarService
       Id = guitar.Id,
       Name = guitarRevision.Name,
       Description = guitarRevision.Description,
+      Luthier = guitarRevision.Luthier == null ? null : new LuthierExerptDto
+      {
+        Id = guitarRevision.Luthier.Id,
+        Name = guitarRevision.Luthier.Name,
+      }
     };
 
     return ServiceResult<GuitarDto>.Success(200, guitarDto);
   }
 
-  public async Task<ServiceResult<GuitarDto>> ApproveUpdateGuitarRevisionAsync(int guitarId, int revisionId, ClaimsPrincipal userClaims)
+  public async Task<ServiceResult<GuitarDto>> ApproveUpdateGuitarRevisionAsync(int guitarId, int revisionId, int iteration, ClaimsPrincipal userClaims)
   {
     var revisionMetadata = await unitOfWork.RevisionMetadataRepository.GetRevisionMetadataAsync(revisionId);
     if (revisionMetadata == null)
@@ -378,6 +415,9 @@ public class GuitarService(IUnitOfWork unitOfWork) : IGuitarService
 
     if (revisionMetadata.Status != RevisionStatus.Pending.ToString())
       return ServiceResult<GuitarDto>.Failure(403, $"Cannot approve Entity Revision ID '{revisionId}' because its status is not 'Pending'.");
+
+    if (revisionMetadata.Iteration != iteration)
+      return ServiceResult<GuitarDto>.Failure(409, $"Cannot approve Entity Revision ID '{revisionId}' because it has changed since the approved review was loaded.");
 
     var oldParentRevisionId = revisionMetadata.ParentRevisionId;
     if (oldParentRevisionId == null)
@@ -420,6 +460,11 @@ public class GuitarService(IUnitOfWork unitOfWork) : IGuitarService
       Id = guitar.Id,
       Name = guitarRevisionEntity.Name,
       Description = guitarRevisionEntity.Description,
+      Luthier = guitarRevisionEntity.Luthier == null ? null : new LuthierExerptDto
+      {
+        Id = guitarRevisionEntity.Luthier.Id,
+        Name = guitarRevisionEntity.Luthier.Name,
+      }
     };
 
     return ServiceResult<GuitarDto>.Success(200, guitarDto);

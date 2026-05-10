@@ -7,11 +7,6 @@ import { PaginationControlsComponent } from '../pagination-controls/pagination-c
 import { Guitar } from '../../models/guitar';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { TextInputComponent } from '../forms/text-input/text-input.component';
-import {
-  allControlsGroupFilled,
-  requireAllControlsValidator,
-} from '../../utils/form.utils';
-import { ErrorTextComponent } from '../error-text/error-text.component';
 import { PaginatedDirectoryComponent } from '../abstract/paginated-directory/paginated-directory.component';
 
 @Component({
@@ -22,7 +17,6 @@ import { PaginatedDirectoryComponent } from '../abstract/paginated-directory/pag
     RouterLink,
     TextInputComponent,
     ReactiveFormsModule,
-    ErrorTextComponent,
   ],
   templateUrl: './guitar-directory.component.html',
   styleUrls: [
@@ -43,35 +37,7 @@ export class GuitarDirectoryComponent extends PaginatedDirectoryComponent<
       default: '',
       validators: [Validators.maxLength(100)],
     },
-    address: {
-      paramCode: 'a',
-      default: '',
-      validators: [Validators.maxLength(200)],
-    },
-    lat: {
-      paramCode: 'la',
-      default: '',
-      validators: [Validators.min(-90), Validators.max(90)],
-    },
-    long: {
-      paramCode: 'lo',
-      default: '',
-      validators: [Validators.min(-180), Validators.max(180)],
-    },
-    radius: {
-      paramCode: 'r',
-      default: '',
-      validators: [Validators.min(0.1), Validators.max(15000)],
-    },
   };
-
-  private coordinateControlNames = ['lat', 'long', 'radius'];
-
-  protected override getFormGroupValidators() {
-    return {
-      validators: requireAllControlsValidator(this.coordinateControlNames),
-    };
-  }
 
   protected fetchPaginatedItems() {
     return this.service.getGuitars({
@@ -79,15 +45,5 @@ export class GuitarDirectoryComponent extends PaginatedDirectoryComponent<
       pageSize: this.paginationSignals.pageSize.signal(),
       ...sanitizeObjectFields(this.searchForm.value),
     });
-  }
-
-  get isDistanceProvided(): boolean {
-    return this.items().some(
-      (guitar) => guitar.distanceInKilometers !== null,
-    );
-  }
-
-  get coordinateGroupHasError(): boolean {
-    return allControlsGroupFilled(this.searchForm, this.coordinateControlNames);
   }
 }

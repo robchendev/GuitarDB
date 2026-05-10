@@ -86,16 +86,18 @@ public class GuitarsController(IGuitarService guitarsService) : BaseApiControlle
   [ProducesResponseType(400)]
   [ProducesResponseType(401)]
   [ProducesResponseType(403)]
+  [ProducesResponseType(409)]
   [ProducesResponseType(500)]
-  public async Task<IActionResult> ApproveCreateGuitarRevision(int revisionId)
-    => (await guitarsService.ApproveCreateGuitarRevisionAsync(revisionId, User)).ToActionResult();
+  public async Task<IActionResult> ApproveCreateGuitarRevision(int revisionId, RevisionIterationDto revisionIterationDto)
+    => (await guitarsService.ApproveCreateGuitarRevisionAsync(revisionId, revisionIterationDto.Iteration, User)).ToActionResult();
 
   [Authorize(Policy = "RequireModeratorRole")]
   [ProducesResponseType(200)]
   [ProducesResponseType(400)]
   [ProducesResponseType(401)]
+  [ProducesResponseType(409)]
   [ProducesResponseType(500)]
   [HttpPost("{guitarId:int}/revisions/{revisionId:int}/approve")]  // update guitar
-  public async Task<IActionResult> ApproveUpdateGuitarRevision(int guitarId, int revisionId)
-    => (await guitarsService.ApproveUpdateGuitarRevisionAsync(guitarId, revisionId, User)).ToActionResult();
+  public async Task<IActionResult> ApproveUpdateGuitarRevision(int guitarId, int revisionId, RevisionIterationDto revisionIterationDto)
+    => (await guitarsService.ApproveUpdateGuitarRevisionAsync(guitarId, revisionId, revisionIterationDto.Iteration, User)).ToActionResult();
 }

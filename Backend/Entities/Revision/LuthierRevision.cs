@@ -9,8 +9,8 @@ public class LuthierRevision : BaseLuthierEntity
   public int Id { get; private set; } // Created to be the same as RevisionMetadata Id, so this cannot be autoincremented
   public RevisionMetadata RevisionMetadata { get; set; } = null!; // uses Id as FK
 
-  public int LuthierId { get; set; }
-  public Luthier Luthier { get; set; } = null!;
+  public int? LuthierId { get; set; }
+  public Luthier? Luthier { get; set; } = null!;
 
   public LuthierRevision(int id)
   {

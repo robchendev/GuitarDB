@@ -35,6 +35,7 @@ public static class ApplicationServiceExtensions
     services.AddScoped<IUnitOfWork, UnitOfWork>();
     services.AddScoped<IUserRepository, UserRepository>();
     services.AddScoped<IGuitarRepository, GuitarRepository>();
+    services.AddScoped<ILuthierRepository, LuthierRepository>();
     services.AddScoped<IRevisionMetadataRepository, RevisionMetadataRepository>();
 
     services.AddScoped<ITokenService, TokenService>(); // create once per http request
@@ -42,6 +43,7 @@ public static class ApplicationServiceExtensions
     services.AddScoped<IAccountService, AccountService>();
     services.AddScoped<IAdminService, AdminService>();
     services.AddScoped<IGuitarService, GuitarService>();
+    services.AddScoped<ILuthierService, LuthierService>();
     services.AddScoped<IRevisionMetadataService, RevisionMetadataService>();
 
     // API Documentation

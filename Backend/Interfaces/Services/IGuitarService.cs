@@ -88,23 +88,25 @@ public interface IGuitarService
   /// <param name="revisionId2">The ID of a Guitar Revision to compare, different from revisionId2.</param>
   /// <param name="guitarId">The ID of the Guitar both Revisions belong to.</param>
   /// <param name="userClaims">Claims of the authenticated user.</param>
-  /// <returns><see cref="GuitarRevisionDiffDto"/></returns>
-  Task<ServiceResult<GuitarRevisionDiffDto>> GetGuitarRevisionDiffAsync(int revisionId1, int revisionId2, int guitarId, ClaimsPrincipal userClaims);
+  /// <returns><see cref="RevisionDiffDto"/></returns>
+  Task<ServiceResult<RevisionDiffDto>> GetGuitarRevisionDiffAsync(int revisionId1, int revisionId2, int guitarId, ClaimsPrincipal userClaims);
 
   /// <summary>
   /// Approves a Guitar Revision that doesn't isn't tied to a Guitar ID, creating a new Guitar.
   /// </summary>
   /// <param name="revisionId">The ID of the Guitar Revision to create a Guitar with.</param>
+  /// <param name="iteration">The iteration number of the Guitar Revision to check for conflicting data.</param>
   /// <param name="userClaims">Claims of the authenticated user.</param>
   /// <returns><see cref="GuitarDto"/></returns>
-  Task<ServiceResult<GuitarDto>> ApproveCreateGuitarRevisionAsync(int revisionId, ClaimsPrincipal userClaims);
+  Task<ServiceResult<GuitarDto>> ApproveCreateGuitarRevisionAsync(int revisionId, int iteration, ClaimsPrincipal userClaims);
 
   /// <summary>
   /// Approves a Guitar Revision that is tied to a Guitar ID, updating the existing Guitar.
   /// </summary>
   /// <param name="guitarId">The ID of the Guitar to update.</param>
   /// <param name="revisionId">The ID of the Guitar Revision to update the Guitar with.</param>
+  /// <param name="iteration">The iteration number of the Guitar Revision to check for conflicting data.</param>
   /// <param name="userClaims">Claims of the authenticated user.</param>
   /// <returns><see cref="GuitarDto"/></returns>
-  Task<ServiceResult<GuitarDto>> ApproveUpdateGuitarRevisionAsync(int guitarId, int revisionId, ClaimsPrincipal userClaims);
+  Task<ServiceResult<GuitarDto>> ApproveUpdateGuitarRevisionAsync(int guitarId, int revisionId, int iteration, ClaimsPrincipal userClaims);
 }

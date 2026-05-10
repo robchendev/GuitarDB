@@ -6,6 +6,7 @@ public interface IUnitOfWork
 {
   IUserRepository UserRepository { get; }
   IGuitarRepository GuitarRepository { get; }
+  ILuthierRepository LuthierRepository { get; }
   IRevisionMetadataRepository RevisionMetadataRepository { get; }
 
   Task<bool> SaveAllAsync();

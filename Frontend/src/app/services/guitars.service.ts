@@ -4,13 +4,13 @@ import { environment } from '../../environments/environment';
 import {
   CreateGuitarDto,
   Guitar,
-  GuitarRevisionDiff,
+  GuitarFields,
   GuitarRevisionSnapshot,
   GuitarSearchParams,
   UpdateGuitarDto,
 } from '../models/guitar';
 import { getHttpParams } from '../utils/params.utils';
-import { RevisionMetadataExcerpt } from '../models/revision';
+import { RevisionDiff, RevisionMetadataExcerpt } from '../models/revision';
 import { GenericSearchParams } from '../models/pagination';
 
 @Injectable({
@@ -70,7 +70,7 @@ export class GuitarsService {
     revisionId1: number,
     revisionId2: number | null,
   ) {
-    return this.http.get<GuitarRevisionDiff>(
+    return this.http.get<RevisionDiff<GuitarFields>>(
       `${this.baseUrl}guitars/${guitarId}/revisions/diff?revisionId1=${revisionId1}&revisionId2=${revisionId2}`,
     );
   }

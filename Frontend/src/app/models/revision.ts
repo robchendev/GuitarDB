@@ -28,6 +28,31 @@ export enum RevisionStatusEnum {
   Committed = 4,
 }
 
+type RevisionChange<T> = {
+  old: T | null;
+  new: T;
+};
+
+interface BaseRevisionChanges {
+  id: RevisionChange<number>;
+  createdAt: RevisionChange<string | null>;
+  createdBy: RevisionChange<string | null>;
+  version: RevisionChange<number | null>;
+  comment: RevisionChange<string>;
+}
+
+type EntityRevisionChanges<T> = {
+  [K in keyof T]?: RevisionChange<T[K]>;
+};
+
+export type RevisionChanges<T> = BaseRevisionChanges & EntityRevisionChanges<T>;
+
+export interface RevisionDiff<T> {
+  entityId: null | number;
+  changes: RevisionChanges<T>;
+  iteration: number;
+}
+
 export interface UserRevisionSearchParams extends GenericSearchParams {
   status?: string;
 }

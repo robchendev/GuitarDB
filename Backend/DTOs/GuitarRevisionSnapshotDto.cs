@@ -7,6 +7,7 @@ public class GuitarRevisionSnapshotDto : GuitarDto
   public int? GuitarId { get; set; }
   public int? Version { get; set; }
   public int? ParentRevisionId { get; set; }
+  public int Iteration { get; set; }
 
   public DateTime? CreatedAt { get; set; }
   public DateTime? UpdatedAt { get; set; }

@@ -12,8 +12,6 @@ import { Router } from '@angular/router';
 import { TextInputComponent } from '../forms/text-input/text-input.component';
 import { FormCtaButtonComponent } from '../forms/form-cta-button/form-cta-button.component';
 import { TextAreaComponent } from '../forms/text-area/text-area.component';
-import { VALID_URL_REGEX } from '../../constants/regex.constants';
-import { requireAllControlsValidator } from '../../utils/form.utils';
 import { HotToastService } from '@ngxpert/hot-toast';
 
 @Component({
@@ -50,28 +48,6 @@ export class GuitarCreateComponent implements OnInit {
         [Validators.required, Validators.maxLength(300)],
       ],
       name: ['', [Validators.required, Validators.maxLength(100)]],
-      alias: ['', [Validators.maxLength(200)]],
-      locationAddress: ['', [Validators.maxLength(500)]],
-      latitude: [
-        null,
-        [
-          Validators.min(-90),
-          Validators.max(90),
-          requireAllControlsValidator(this.coordinateGroup),
-        ],
-      ],
-      longitude: [
-        null,
-        [
-          Validators.min(-180),
-          Validators.max(180),
-          requireAllControlsValidator(this.coordinateGroup),
-        ],
-      ],
-      websiteUrl: [
-        '',
-        [Validators.maxLength(300), Validators.pattern(VALID_URL_REGEX)],
-      ],
       description: ['', [Validators.maxLength(2000)]],
     });
   }
@@ -91,20 +67,6 @@ export class GuitarCreateComponent implements OnInit {
       .createGuitar({
         comment: this.createGuitarForm.value.comment,
         name: this.createGuitarForm.value.name,
-        alias: this.createGuitarForm.value.alias ?? undefined,
-        locationAddress:
-          this.createGuitarForm.value.locationAddress ?? undefined,
-        locationCoordinateLatitude:
-          this.createGuitarForm.value.latitude != null &&
-          this.createGuitarForm.value.latitude !== ''
-            ? Number(this.createGuitarForm.value.latitude)
-            : undefined,
-        locationCoordinateLongitude:
-          this.createGuitarForm.value.longitude != null &&
-          this.createGuitarForm.value.longitude !== ''
-            ? Number(this.createGuitarForm.value.longitude)
-            : undefined,
-        websiteUrl: this.createGuitarForm.value.websiteUrl ?? undefined,
         description: this.createGuitarForm.value.description ?? undefined,
       })
       .subscribe({

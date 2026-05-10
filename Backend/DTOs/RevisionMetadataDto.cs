@@ -7,6 +7,7 @@ public class RevisionMetadataDto
   public string Status { get; set; } = null!;
   public int? Version { get; set; }
   public int? ParentRevisionId { get; set; }
+  public int Iteration { get; set; }
 
   public string EntityType { get; set; } = default!;
 

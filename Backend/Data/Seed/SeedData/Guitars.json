@@ -7,6 +7,7 @@
   {
     "Name": "jc43",
     "Description": "This should be committed",
-    "BrandId": 3
+    "BrandId": 3,
+    "LuthierId": 1
   }
 ]

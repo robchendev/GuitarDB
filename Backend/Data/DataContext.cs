@@ -40,7 +40,7 @@ public class DataContext(DbContextOptions options) : IdentityDbContext<
   // revision system
   public DbSet<RevisionMetadata> RevisionMetadatas { get; set; }
   public DbSet<GuitarRevision> GuitarRevisions { get; set; }
-  public DbSet<LuthierRevision> LuthierRevision { get; set; }
+  public DbSet<LuthierRevision> LuthierRevisions { get; set; }
 
   protected override void OnModelCreating(ModelBuilder builder)
   {

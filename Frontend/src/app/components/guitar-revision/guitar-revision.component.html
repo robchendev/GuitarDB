@@ -1,12 +1,10 @@
 <!-- TODO: add loading checks -->
 <!-- TODO: also display the snapshot below as well -->
-<h2>
-  Guitar Revision (ID: {{ guitarRevisionDiff?.guitarId ?? "pending" }})
-</h2>
+<h2>Guitar Revision (ID: {{ guitarRevisionDiff?.entityId ?? "pending" }})</h2>
 @if (guitarRevisionDiff) {
   <table>
     <tr>
-      <th>Guitar ID: {{ guitarRevisionDiff.guitarId ?? "pending" }}</th>
+      <th>Guitar ID: {{ guitarRevisionDiff.entityId ?? "pending" }}</th>
       @if (guitarRevisionDiff.changes.version.old) {
         <th>Old (Version {{ guitarRevisionDiff.changes.version.old }})</th>
       } @else {
@@ -123,55 +121,6 @@
       [value]="guitarRevisionDiff.changes.name"
       [runDiff]="true"
     ></tr>
-    <tr
-      app-revision-diff-row
-      key="Alias"
-      [value]="guitarRevisionDiff.changes.alias"
-      [runDiff]="true"
-    ></tr>
-    <tr
-      app-revision-diff-row
-      key="Address"
-      [value]="guitarRevisionDiff.changes.locationAddress"
-      [runDiff]="true"
-    ></tr>
-    <tr>
-      @if (guitarRevisionDiff.changes.locationCoordinates) {
-        <td class="attribute">Coordinates</td>
-        <td>
-          @if (guitarRevisionDiff.changes.locationCoordinates.old != null) {
-            @for (
-              part of getCoordinatesDiffParts(
-                false,
-                guitarRevisionDiff.changes.locationCoordinates.old,
-                guitarRevisionDiff.changes.locationCoordinates.new
-              );
-              track $index
-            ) {
-              <span [class]="part.type">{{ part.value }}</span>
-            }
-          }
-        </td>
-        <td>
-          @for (
-            part of getCoordinatesDiffParts(
-              true,
-              guitarRevisionDiff.changes.locationCoordinates.old,
-              guitarRevisionDiff.changes.locationCoordinates.new
-            );
-            track $index
-          ) {
-            <span [class]="part.type">{{ part.value }}</span>
-          }
-        </td>
-      }
-    </tr>
-    <tr
-      app-revision-diff-row
-      key="Website URL"
-      [value]="guitarRevisionDiff.changes.websiteUrl"
-      [runDiff]="true"
-    ></tr>
     <tr>
       @if (guitarRevisionDiff.changes.description) {
         <td class="attribute">Description</td>
@@ -213,6 +162,13 @@
         </td>
       }
     </tr>
+    <tr
+      app-revision-diff-row
+      key="Luthier"
+      [value]="guitarRevisionDiff.changes.luthier"
+      displayKey="name"
+      [runDiff]="true"
+    ></tr>
   </table>
 } @else if (!loadingService.isLoadingId(loadingKey)) {
   <p>Could not load data</p>

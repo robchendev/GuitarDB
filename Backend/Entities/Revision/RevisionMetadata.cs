@@ -14,6 +14,7 @@ public class RevisionMetadata : BaseAuditableEntity
   public int? ParentRevisionId { get; set; }
   public int? Version { get; set; }
   public string Comment { get; set; } = string.Empty;
+  public int Iteration { get; set; } // used to track which version of edit this revision is in
 
   public RevisionMetadata ParentRevision { get; set; } = null!;
 

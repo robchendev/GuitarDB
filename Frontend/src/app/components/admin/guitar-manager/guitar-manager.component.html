@@ -21,48 +21,6 @@
     }"
     [showErrors]="submitted()"
   />
-  <app-text-input
-    label="Address"
-    formControlName="address"
-    [errorMessages]="{
-      maxlength: 'Address cannot be more than 200 characters long.',
-    }"
-    [showErrors]="submitted()"
-  />
-  <div class="coordinate-search">
-    <app-text-input
-      label="Latitude"
-      formControlName="lat"
-      [errorMessages]="{
-        min: 'Latitude must be between -90 and 90.',
-        max: 'Latitude must be between -90 and 90.',
-      }"
-      [showErrors]="submitted()"
-    />
-    <app-text-input
-      label="Longitude"
-      formControlName="long"
-      [errorMessages]="{
-        min: 'Longitude must be between -180 and 180.',
-        max: 'Longitude must be between -180 and 180.',
-      }"
-      [showErrors]="submitted()"
-    />
-    <app-text-input
-      label="Radius"
-      formControlName="radius"
-      [errorMessages]="{
-        min: 'Minimum radius is 0.1km',
-        max: 'Maximum radius is 15000km',
-      }"
-      [showErrors]="submitted()"
-    />
-  </div>
-  @if (submitted() && coordinateGroupHasError) {
-    <app-error-text
-      text="Latitude, Longitude, and Radius must be provided together if one of them are provided."
-    />
-  }
   <div>
     <button>Search</button>
     <button type="button" (click)="onResetSearch()">Reset</button>
@@ -74,11 +32,6 @@
       <tr>
         <th style="width: 10%">ID</th>
         <th style="width: 20%">Name</th>
-        <th style="width: 30%">Address</th>
-        <th style="width: 20%">WebsiteUrl</th>
-        @if (isDistanceProvided) {
-          <th style="width: 20%">Distance</th>
-        }
       </tr>
     </thead>
     <tbody>
@@ -87,22 +40,10 @@
           <td>{{ guitar.id }}</td>
           @if (deletedGuitarIds.has(guitar.id)) {
             <td>deleted</td>
-            <td>deleted</td>
-            <td>deleted</td>
-            @if (isDistanceProvided) {
-              <td>deleted</td>
-            }
           } @else {
             <td>
               <a [routerLink]="['/guitars', guitar.id]">{{ guitar.name }}</a>
             </td>
-            <td>{{ guitar.locationAddress }}</td>
-            <td>
-              <a [href]="guitar.websiteUrl">{{ guitar.websiteUrl }}</a>
-            </td>
-            @if (isDistanceProvided) {
-              <td>{{ guitar.distanceInKilometers?.toFixed(2) }} km</td>
-            }
           }
           <td>
             <button

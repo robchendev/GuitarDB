@@ -13,7 +13,7 @@
     "Description": "Changed Text\nMultiline",
     "BrandId": 1
   },
-    {
+  {
     "Id": 3,
     "GuitarId": 1,
     "Name": "114ce",
@@ -32,6 +32,7 @@
     "GuitarId": 2,
     "Name": "jc43",
     "Description": "This should be committed",
-    "BrandId": 3
+    "BrandId": 3,
+    "LuthierId": 1
   }
 ]

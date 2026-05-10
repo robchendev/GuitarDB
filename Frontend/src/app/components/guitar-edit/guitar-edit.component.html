@@ -20,52 +20,6 @@
         maxlength: 'Name must be at most 100 characters',
       }"
     />
-    <app-text-input
-      label="Alias"
-      formControlName="alias"
-      [errorMessages]="{
-        maxlength: 'Aliases combined must be at most 200 characters',
-      }"
-    />
-    <app-text-input
-      label="Location Address"
-      formControlName="locationAddress"
-      [errorMessages]="{
-        maxlength: 'Location address must be at most 200 characters',
-      }"
-    />
-    <app-text-input
-      label="Location Latitude"
-      formControlName="latitude"
-      type="number"
-      [errorMessages]="{
-        requireOtherMismatch:
-          'Latitude must be provided if longitude is provided.',
-        min: 'Latitude must be higher than or equal to -90.',
-        max: 'Latitude must be lower than or equal to 90.',
-      }"
-      [showErrors]="submitted"
-    />
-    <app-text-input
-      label="Location Longitude"
-      formControlName="longitude"
-      type="number"
-      [errorMessages]="{
-        requireOtherMismatch:
-          'Longitude must be provided if Latitude is provided.',
-        min: 'Longitude must be higher than or equal to -180.',
-        max: 'Longitude must be lower than or equal to 180.',
-      }"
-      [showErrors]="submitted"
-    />
-    <app-text-input
-      label="Website URL"
-      formControlName="websiteUrl"
-      [errorMessages]="{
-        maxlength: 'Website URL must be at most 300 characters',
-        pattern: 'Website URL must be valid and start with https:// or http://',
-      }"
-    />
     <app-text-area
       label="Description"
       formControlName="description"
@@ -73,6 +27,24 @@
         maxlength: 'Description must be at most 2000 characters',
       }"
     />
+    <app-text-input
+      label="Luthier (TODO Search)"
+      formControlName="luthier"
+      [errorMessages]="{
+        maxlength: 'Luthier name must be at most 100 characters',
+      }"
+    />
+    <div>
+      Selected luthier: {{ selectedLuthier ? selectedLuthier.name : "None" }}
+    </div>
+    <button (click)="onSearchLuthier()">Search Luthier</button>
+    @for (luthier of luthierSearchResults; track luthier.id) {
+      <div>
+        {{ luthier.name }}
+        <button (click)="onAssignLuthier(luthier)">Assign</button>
+      </div>
+    }
+    <div>Can't find your luthier? Add them (link to New Luthier page)</div>
     <div>
       Description Length:
       {{ editGuitarForm.get("description")?.value?.length || 0 }}/2000

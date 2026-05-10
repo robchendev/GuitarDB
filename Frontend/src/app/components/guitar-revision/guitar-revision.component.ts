@@ -2,19 +2,13 @@ import { Component, inject, OnInit } from '@angular/core';
 import { LoadingService } from '../../services/loading.service';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { GuitarsService } from '../../services/guitars.service';
-import {
-  LocationCoordinates,
-  GuitarRevisionDiff,
-  GuitarRevisionSnapshot,
-} from '../../models/guitar';
+import { GuitarRevisionSnapshot, GuitarFields } from '../../models/guitar';
 import { RevisionDiffRowComponent } from '../revision-diff-row/revision-diff-row.component';
-import {
-  getCoordinatesDiffParts,
-  getMultilineDiffParts,
-} from '../../utils/diff.utils';
+import { getMultilineDiffParts } from '../../utils/diff.utils';
 import { getReadableDate } from '../../utils/date.utils';
 import { GuitarsFrameService } from '../../services/guitar-frame.service';
 import { AccountService } from '../../services/account.service';
+import { RevisionDiff } from '../../models/revision';
 
 @Component({
   selector: 'app-guitar-revision',
@@ -34,7 +28,7 @@ export class GuitarRevisionComponent implements OnInit {
   loadingKey = '';
   guitarsFrameService = inject(GuitarsFrameService);
 
-  guitarRevisionDiff?: GuitarRevisionDiff;
+  guitarRevisionDiff?: Omit<RevisionDiff<GuitarFields>, 'iteration'>;
 
   ngOnInit(): void {
     // Not using guitarsFrameService to load cache in here, since I dont expect users to go back and forth between revisions
@@ -55,16 +49,16 @@ export class GuitarRevisionComponent implements OnInit {
       this.guitarsService
         .getGuitarRevisionDiffs(guitarId, revisionId1, revisionId2)
         .subscribe({
-          next: (guitarRevisionDiff: GuitarRevisionDiff) => {
+          next: (guitarRevisionDiff: RevisionDiff<GuitarFields>) => {
             this.guitarRevisionDiff = guitarRevisionDiff;
-            if (this.guitarRevisionDiff.changes.createdAt) {
-              this.guitarRevisionDiff.changes.createdAt.old =
+            if (this.guitarRevisionDiff.changes['createdAt']) {
+              this.guitarRevisionDiff.changes['createdAt'].old =
                 this.getReadableDate(
-                  this.guitarRevisionDiff.changes.createdAt.old,
+                  this.guitarRevisionDiff.changes['createdAt'].old,
                 );
-              this.guitarRevisionDiff.changes.createdAt.new =
+              this.guitarRevisionDiff.changes['createdAt'].new =
                 this.getReadableDate(
-                  this.guitarRevisionDiff.changes.createdAt.new,
+                  this.guitarRevisionDiff.changes['createdAt'].new,
                 );
             }
             this.loadingService.idle(this.loadingKey);
@@ -86,14 +80,10 @@ export class GuitarRevisionComponent implements OnInit {
             version,
             comment,
             name,
-            alias,
-            locationAddress,
-            locationCoordinates,
-            websiteUrl,
             description,
           } = guitarRevisionSnapshot;
           this.guitarRevisionDiff = {
-            guitarId: rId,
+            entityId: rId,
             changes: {
               id: {
                 old: null,
@@ -122,34 +112,6 @@ export class GuitarRevisionComponent implements OnInit {
                   : {
                       old: null,
                       new: name,
-                    },
-              alias:
-                alias == null
-                  ? undefined
-                  : {
-                      old: null,
-                      new: alias,
-                    },
-              locationAddress:
-                locationAddress == null
-                  ? undefined
-                  : {
-                      old: null,
-                      new: locationAddress,
-                    },
-              locationCoordinates:
-                locationCoordinates == null
-                  ? undefined
-                  : {
-                      old: null,
-                      new: locationCoordinates,
-                    },
-              websiteUrl:
-                websiteUrl == null
-                  ? undefined
-                  : {
-                      old: null,
-                      new: websiteUrl,
                     },
               description:
                 description == null
@@ -181,7 +143,10 @@ export class GuitarRevisionComponent implements OnInit {
     return description.split('\n').filter((p) => p.trim().length > 0);
   }
 
-  getReadableDate(dateIsoString: string | null): string | null {
+  getReadableDate(dateIsoString: unknown | null): string | null {
+    if (typeof dateIsoString !== 'string' && dateIsoString !== null) {
+      return null;
+    }
     return getReadableDate(dateIsoString);
   }
 
@@ -192,14 +157,5 @@ export class GuitarRevisionComponent implements OnInit {
     fallback: string = '',
   ) {
     return getMultilineDiffParts(isNewDiff, oldVal, newVal, fallback);
-  }
-
-  public getCoordinatesDiffParts(
-    isNewDiff: boolean,
-    oldCoords?: LocationCoordinates | null,
-    newCoords?: LocationCoordinates | null,
-    fallback: string = '',
-  ) {
-    return getCoordinatesDiffParts(isNewDiff, oldCoords, newCoords, fallback);
   }
 }

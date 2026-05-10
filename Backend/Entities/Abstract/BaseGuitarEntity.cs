@@ -11,19 +11,19 @@ public abstract class BaseGuitarEntity
 
   // ORIGIN INFO
   public int? LuthierId { get; set; }
-  public Luthier? Luthier { get; set; } = null!;
+  public Luthier? Luthier { get; set; }
   public int? BrandId { get; set; }
-  public Brand? Brand { get; set; } = null!;
+  public Brand? Brand { get; set; }
   public string? CountryId { get; set; } // jp, ca, us
   public Country? Country { get; set; }
 
   // SHARED CONSTRUCTION INFO
   public int? GuitarTypeId { get; set; } // Acoustic, Electric, Classical
-  public GuitarType? GuitarType { get; set; } = null!;
+  public GuitarType? GuitarType { get; set; }
   public int? GuitarBodyShapeId { get; set; }
-  public GuitarBodyShape? GuitarBodyShape { get; set; } = null!;
+  public GuitarBodyShape? GuitarBodyShape { get; set; }
   public int? GuitarBracingTypeId { get; set; }
-  public GuitarBracingType? GuitarBracingType { get; set; } = null!;
+  public GuitarBracingType? GuitarBracingType { get; set; }
   public int? NumberOfStrings { get; set; }
   public int? NumberOfFrets { get; set; }
   public decimal? ScaleLength { get; set; } // e.g. 650mm,

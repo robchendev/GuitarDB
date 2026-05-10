@@ -16,5 +16,12 @@ public class RoasterConfiguration : IEntityTypeConfiguration<Guitar>
     builder
       .HasIndex(r => new { r.Name, r.BrandId })
       .IsUnique();
+
+    // Guitars > Luthier
+    builder
+      .HasOne(g => g.Luthier)
+      .WithMany()
+      .HasForeignKey(g => g.LuthierId)
+      .OnDelete(DeleteBehavior.Restrict);
   }
 }

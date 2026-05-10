@@ -4,6 +4,7 @@ import {
   Guitar,
   GuitarOriginalData,
   GuitarRevisionSnapshot,
+  LuthierExcerpt,
 } from '../../models/guitar';
 import { LoadingService } from '../../services/loading.service';
 import { GuitarsService } from '../../services/guitars.service';
@@ -17,10 +18,11 @@ import {
 } from '@angular/forms';
 import { objectsAreIdentical } from '../../utils/objects.utils';
 import { TextAreaComponent } from '../forms/text-area/text-area.component';
-import { VALID_URL_REGEX } from '../../constants/regex.constants';
-import { requireAllControlsValidator } from '../../utils/form.utils';
 import { HotToastService } from '@ngxpert/hot-toast';
 import { GuitarsFrameService } from '../../services/guitar-frame.service';
+import { LuthiersService } from '../../services/luthiers.service';
+import { Luthier } from '../../models/luthier';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-guitar-edit',
@@ -35,19 +37,21 @@ import { GuitarsFrameService } from '../../services/guitar-frame.service';
 })
 export class GuitarEditComponent implements OnInit {
   protected guitarsService = inject(GuitarsService);
+  protected luthiersService = inject(LuthiersService);
   guitarsFrameService = inject(GuitarsFrameService);
   router = inject(Router);
   toast = inject(HotToastService);
   id: number | null = null;
   loadingService = inject(LoadingService);
   guitar?: GuitarOriginalData;
+  luthierSearchResults: Luthier[] = [];
+  selectedLuthier: LuthierExcerpt | null = null;
 
   private fb = new FormBuilder();
 
   editGuitarForm: FormGroup = new FormGroup({});
   validationErrors: string[] = [];
   submitted = false;
-  coordinateGroup = ['latitude', 'longitude'];
 
   ngOnInit(): void {
     this.initializeForm();
@@ -67,47 +71,28 @@ export class GuitarEditComponent implements OnInit {
             ...guitar,
             comment: '',
           };
-          const {
-            name,
-            alias,
-            locationAddress,
-            locationCoordinates,
-            websiteUrl,
-            description,
-          } = guitar;
+          const { name, description, luthier } = guitar;
+          this.selectedLuthier = luthier;
           this.editGuitarForm.patchValue({
             comment: '',
             name: name ?? '',
-            alias: alias ?? '',
-            locationAddress: locationAddress ?? '',
-            websiteUrl: websiteUrl ?? '',
             description: description ?? '',
-            latitude: locationCoordinates?.latitude,
-            longitude: locationCoordinates?.longitude,
+            luthier: luthier?.name ?? '',
+            luthierId: luthier?.id ?? '',
           });
         },
       });
   }
 
   initializeForm() {
-    this.editGuitarForm = this.fb.group(
-      {
-        comment: ['', [Validators.required, Validators.maxLength(300)]],
-        name: ['', [Validators.required, Validators.maxLength(100)]],
-        alias: ['', [Validators.maxLength(200)]],
-        locationAddress: ['', [Validators.maxLength(500)]],
-        latitude: ['', [Validators.min(-90), Validators.max(90)]],
-        longitude: ['', [Validators.min(-180), Validators.max(180)]],
-        websiteUrl: [
-          '',
-          [Validators.maxLength(300), Validators.pattern(VALID_URL_REGEX)],
-        ],
-        description: ['', [Validators.maxLength(2000)]],
-      },
-      {
-        validators: requireAllControlsValidator(this.coordinateGroup),
-      },
-    );
+    this.editGuitarForm = this.fb.group({
+      comment: ['', [Validators.required, Validators.maxLength(300)]],
+      name: ['', [Validators.required, Validators.maxLength(100)]],
+      description: ['', [Validators.maxLength(2000)]],
+      luthierDisplayName: [''],
+      luthier: ['', [Validators.maxLength(100)]],
+      luthierId: [null],
+    });
   }
 
   onEditGuitar() {
@@ -125,6 +110,32 @@ export class GuitarEditComponent implements OnInit {
       return;
     }
     this.updateGuitar();
+  }
+
+  onSearchLuthier() {
+    this.luthiersService
+      .getLuthiers({
+        page: 1,
+        pageSize: 5,
+        name: this.editGuitarForm.value.luthier,
+      })
+      .subscribe({
+        next: (response: HttpResponse<Luthier[]>) => {
+          this.luthierSearchResults = response.body ?? [];
+        },
+      });
+  }
+
+  onAssignLuthier(luthier: Luthier) {
+    this.editGuitarForm.patchValue({
+      luthier: luthier.name,
+      luthierId: luthier.id,
+    });
+    this.selectedLuthier = {
+      name: luthier.name,
+      id: luthier.id,
+    };
+    this.luthierSearchResults = [];
   }
 
   updateGuitar() {
@@ -151,19 +162,7 @@ export class GuitarEditComponent implements OnInit {
     return {
       comment: this.editGuitarForm.value.comment,
       name: this.editGuitarForm.value.name,
-      alias: this.editGuitarForm.value.alias ?? undefined,
-      locationAddress: this.editGuitarForm.value.locationAddress ?? undefined,
-      locationCoordinateLatitude:
-        this.editGuitarForm.value.latitude != null &&
-        this.editGuitarForm.value.latitude !== ''
-          ? Number(this.editGuitarForm.value.latitude)
-          : undefined,
-      locationCoordinateLongitude:
-        this.editGuitarForm.value.longitude != null &&
-        this.editGuitarForm.value.longitude !== ''
-          ? Number(this.editGuitarForm.value.longitude)
-          : undefined,
-      websiteUrl: this.editGuitarForm.value.websiteUrl ?? undefined,
+      luthierId: this.editGuitarForm.value.luthierId ?? undefined,
       description: this.editGuitarForm.value.description ?? undefined,
     };
   }
@@ -193,19 +192,14 @@ export class GuitarEditComponent implements OnInit {
 
   getIsDataUnchanged(): boolean {
     if (!this.guitar) return true;
-    const { id, distanceInKilometers, locationCoordinates, ...originalData } =
-      this.guitar;
+    const { id, ...originalData } = this.guitar;
 
     const normalizedFormValue = {
       ...this.editGuitarForm.value,
-      latitude: String(this.editGuitarForm.value.latitude),
-      longitude: String(this.editGuitarForm.value.longitude),
     };
 
     const normalizedOriginalData = {
       ...originalData,
-      latitude: String(locationCoordinates?.latitude),
-      longitude: String(locationCoordinates?.longitude),
       description: originalData.description ?? '',
     };
 

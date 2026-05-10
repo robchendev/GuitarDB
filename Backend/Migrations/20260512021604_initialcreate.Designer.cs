@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Backend.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20260510013951_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260512021604_initialcreate")]
+    partial class initialcreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -728,7 +728,7 @@ namespace Backend.Migrations
                         .HasColumnType("text")
                         .HasColumnName("description");
 
-                    b.Property<int>("LuthierId")
+                    b.Property<int?>("LuthierId")
                         .HasColumnType("integer")
                         .HasColumnName("luthier_id");
 
@@ -738,15 +738,15 @@ namespace Backend.Migrations
                         .HasColumnName("name");
 
                     b.HasKey("Id")
-                        .HasName("pk_luthier_revision");
+                        .HasName("pk_luthier_revisions");
 
                     b.HasIndex("CountryId")
-                        .HasDatabaseName("ix_luthier_revision_country_id");
+                        .HasDatabaseName("ix_luthier_revisions_country_id");
 
                     b.HasIndex("LuthierId")
-                        .HasDatabaseName("ix_luthier_revision_luthier_id");
+                        .HasDatabaseName("ix_luthier_revisions_luthier_id");
 
-                    b.ToTable("luthier_revision", (string)null);
+                    b.ToTable("luthier_revisions", (string)null);
                 });
 
             modelBuilder.Entity("Backend.Entities.Revision.RevisionMetadata", b =>
@@ -770,6 +770,10 @@ namespace Backend.Migrations
                     b.Property<int?>("CreatedById")
                         .HasColumnType("integer")
                         .HasColumnName("created_by_id");
+
+                    b.Property<int>("Iteration")
+                        .HasColumnType("integer")
+                        .HasColumnName("iteration");
 
                     b.Property<int?>("ParentRevisionId")
                         .HasColumnType("integer")
@@ -1245,6 +1249,7 @@ namespace Backend.Migrations
                     b.HasOne("Backend.Entities.Luthier", "Luthier")
                         .WithMany()
                         .HasForeignKey("LuthierId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .HasConstraintName("fk_guitars_luthiers_luthier_id");
 
                     b.HasOne("Backend.Entities.Catalog.MaterialConstruction", "NeckMaterialConstruction")
@@ -1590,21 +1595,20 @@ namespace Backend.Migrations
                     b.HasOne("Backend.Entities.Catalog.Country", "Country")
                         .WithMany()
                         .HasForeignKey("CountryId")
-                        .HasConstraintName("fk_luthier_revision_countries_country_id");
+                        .HasConstraintName("fk_luthier_revisions_countries_country_id");
 
                     b.HasOne("Backend.Entities.Revision.RevisionMetadata", "RevisionMetadata")
                         .WithOne("LuthierRevision")
                         .HasForeignKey("Backend.Entities.Revision.LuthierRevision", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_luthier_revision_revision_metadatas_id");
+                        .HasConstraintName("fk_luthier_revisions_revision_metadatas_id");
 
                     b.HasOne("Backend.Entities.Luthier", "Luthier")
                         .WithMany("Revisions")
                         .HasForeignKey("LuthierId")
                         .OnDelete(DeleteBehavior.SetNull)
-                        .IsRequired()
-                        .HasConstraintName("fk_luthier_revision_luthiers_luthier_id");
+                        .HasConstraintName("fk_luthier_revisions_luthiers_luthier_id");
 
                     b.Navigation("Country");
 

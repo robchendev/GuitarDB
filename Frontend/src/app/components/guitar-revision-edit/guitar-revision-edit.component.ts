@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { GuitarEditComponent } from '../guitar-edit/guitar-edit.component';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { GuitarRevisionSnapshot } from '../../models/guitar';
 import { FormCtaButtonComponent } from '../forms/form-cta-button/form-cta-button.component';
 import { TextAreaComponent } from '../forms/text-area/text-area.component';
@@ -44,17 +44,8 @@ export class GuitarRevisionEditComponent extends GuitarEditComponent {
       .getGuitarRevisionSnapshot(revisionIdFromRoute)
       .subscribe({
         next: (guitarRevisionSnapshot: GuitarRevisionSnapshot) => {
-          const {
-            id,
-            name,
-            alias,
-            locationAddress,
-            locationCoordinates,
-            websiteUrl,
-            description,
-            comment,
-            guitarId,
-          } = guitarRevisionSnapshot;
+          const { id, name, description, luthier, comment, guitarId } =
+            guitarRevisionSnapshot;
 
           this.revisionId = id;
 
@@ -63,29 +54,22 @@ export class GuitarRevisionEditComponent extends GuitarEditComponent {
             comment,
             id: guitarId ?? 0, // this doesn't matter for editing the revision, but we want typescript to be happy
             name,
-            alias,
-            locationAddress,
-            locationCoordinates,
-            websiteUrl,
             description,
+            luthier,
           };
           this.editGuitarForm.patchValue({
             comment: comment ?? '',
             name: name ?? '',
-            alias: alias ?? '',
-            locationAddress: locationAddress ?? '',
-            websiteUrl: websiteUrl ?? '',
             description: description ?? '',
-            latitude: locationCoordinates?.latitude,
-            longitude: locationCoordinates?.longitude,
+            luthier: luthier ?? '',
           });
         },
       });
   }
 
   override updateGuitarNext = (
-  guitarRevisionSnapshot: GuitarRevisionSnapshot,
-  loadingId: string,
+    guitarRevisionSnapshot: GuitarRevisionSnapshot,
+    loadingId: string,
   ) => {
     this.validationErrors = [];
     this.loadingService.idle(loadingId);
