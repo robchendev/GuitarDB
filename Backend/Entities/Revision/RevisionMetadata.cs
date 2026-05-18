@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Backend.Entities.Abstract;
 using Backend.Enums;
 
@@ -14,7 +15,9 @@ public class RevisionMetadata : BaseAuditableEntity
   public int? ParentRevisionId { get; set; }
   public int? Version { get; set; }
   public string Comment { get; set; } = string.Empty;
-  public int Iteration { get; set; } // used to track which version of edit this revision is in
+
+  // concurrency tracking
+  public uint RowVersion { get; set; }
 
   public RevisionMetadata ParentRevision { get; set; } = null!;
 

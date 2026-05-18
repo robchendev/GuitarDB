@@ -1,3 +1,6 @@
+using Backend.Common.Interfaces;
+using Backend.DTOs.Abstract;
+
 namespace Backend.DTOs;
 
 public class LuthierExerptDto
@@ -6,10 +9,7 @@ public class LuthierExerptDto
   public string Name { get; set; } = null!;
 }
 
-public class GuitarDto
+public class GuitarDto : BaseGuitarDto, IHasId
 {
   public required int Id { get; set; }
-  public required string Name { get; set; }
-  public string? Description { get; set; }
-  public LuthierExerptDto? Luthier { get; set; }
 }

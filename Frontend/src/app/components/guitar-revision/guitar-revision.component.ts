@@ -28,7 +28,7 @@ export class GuitarRevisionComponent implements OnInit {
   loadingKey = '';
   guitarsFrameService = inject(GuitarsFrameService);
 
-  guitarRevisionDiff?: Omit<RevisionDiff<GuitarFields>, 'iteration'>;
+  guitarRevisionDiff?: Omit<RevisionDiff<GuitarFields>, 'rowVersion'>;
 
   ngOnInit(): void {
     // Not using guitarsFrameService to load cache in here, since I dont expect users to go back and forth between revisions

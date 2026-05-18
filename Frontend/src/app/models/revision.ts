@@ -50,7 +50,7 @@ export type RevisionChanges<T> = BaseRevisionChanges & EntityRevisionChanges<T>;
 export interface RevisionDiff<T> {
   entityId: null | number;
   changes: RevisionChanges<T>;
-  iteration: number;
+  rowVersion: number;
 }
 
 export interface UserRevisionSearchParams extends GenericSearchParams {

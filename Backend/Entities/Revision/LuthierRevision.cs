@@ -3,7 +3,7 @@ using Backend.Entities.Abstract;
 
 namespace Backend.Entities.Revision;
 
-public class LuthierRevision : BaseLuthierEntity
+public class LuthierRevision : BaseLuthierEntity, IRevisionEntity
 {
   [DatabaseGenerated(DatabaseGeneratedOption.None)]
   public int Id { get; private set; } // Created to be the same as RevisionMetadata Id, so this cannot be autoincremented

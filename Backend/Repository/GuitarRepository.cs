@@ -1,4 +1,3 @@
-using System.Reflection;
 using Backend.Common;
 using Backend.Common.Params;
 using Backend.Data;
@@ -13,7 +12,7 @@ namespace Backend.Repository;
 
 public class GuitarRepository(DataContext context) : IGuitarRepository
 {
-  public async Task<GuitarDto?> GetGuitarByIdAsync(int id)
+  public async Task<GuitarDto?> GetByIdAsync(int id)
   {
     return await context.Guitars
       .Where(g => g.Id == id)
@@ -31,7 +30,7 @@ public class GuitarRepository(DataContext context) : IGuitarRepository
       .SingleOrDefaultAsync();
   }
 
-  public async Task<PagedList<GuitarDto>> GetGuitarsAsync(GuitarParams guitarParams)
+  public async Task<PagedList<GuitarDto>> GetAllAsync(GuitarSearchParams guitarParams)
   {
     var query = context.Guitars.AsQueryable();
 
@@ -53,7 +52,7 @@ public class GuitarRepository(DataContext context) : IGuitarRepository
     return await PagedList<GuitarDto>.CreateAsync(dtoQuery, guitarParams.Page, guitarParams.PageSize);
   }
 
-  public Guitar CreateGuitar(GuitarRevision guitarRevision)
+  public Guitar Create(GuitarRevision guitarRevision)
   {
     var guitar = new Guitar
     {
@@ -68,7 +67,7 @@ public class GuitarRepository(DataContext context) : IGuitarRepository
     return guitar;
   }
 
-  public async Task<Guitar?> UpdateGuitarAsync(GuitarRevision guitarRevision)
+  public async Task<Guitar?> UpdateAsync(GuitarRevision guitarRevision)
   {
     var guitar = await context.Guitars
       .Where(g => g.Id == guitarRevision.GuitarId)
@@ -83,7 +82,7 @@ public class GuitarRepository(DataContext context) : IGuitarRepository
     return guitar;
   }
 
-  public async Task<bool> DeleteGuitarAsync(int id)
+  public async Task<bool> DeleteAsync(int id)
   {
     var guitar = await context.Guitars
       .Where(g => g.Id == id)
@@ -97,29 +96,29 @@ public class GuitarRepository(DataContext context) : IGuitarRepository
   }
 
   // TODO: Add logic to check if guitar exists via name + luthier or name + brand 
-  public async Task<bool> GuitarExistsAsync(string name, int? brandId = null, int? luthierId = null, int? excludeId = null)
+  public async Task<bool> ExistsAsync(GuitarExistsParams @params)
   {
-    string normalizedName = name.ToLower();
+    string normalizedName = @params.Name.ToLower();
 
     var query = context.Guitars.Where(g =>
       g.Name.ToLower() == normalizedName &&
-      (brandId == g.BrandId || luthierId == g.LuthierId)
+      (@params.BrandId == g.BrandId || @params.LuthierId == g.LuthierId)
     );
 
-    if (excludeId.HasValue)
+    if (@params.ExcludeId.HasValue)
     {
-      query = query.Where(g => g.Id != excludeId.Value);
+      query = query.Where(g => g.Id != @params.ExcludeId.Value);
     }
 
     return await query.AnyAsync();
   }
 
-  public async Task<bool> GuitarExistsByIdAsync(int id)
+  public async Task<bool> ExistsByIdAsync(int id)
   {
     return await context.Guitars.AnyAsync(g => g.Id == id);
   }
 
-  public async Task<PagedList<RevisionMetadataExcerptDto>> GetGuitarRevisionExcerptsAsync(RevisionParams revisionExcerptParams, int guitarId, bool userIsModerator = false)
+  public async Task<PagedList<RevisionMetadataExcerptDto>> GetRevisionExcerptsAsync(RevisionParams revisionExcerptParams, int guitarId, bool userIsModerator = false)
   {
     var query = context.GuitarRevisions.AsQueryable();
 
@@ -146,7 +145,7 @@ public class GuitarRepository(DataContext context) : IGuitarRepository
     return await PagedList<RevisionMetadataExcerptDto>.CreateAsync(dtoQuery, revisionExcerptParams.Page, revisionExcerptParams.PageSize);
   }
 
-  public async Task<PagedList<RevisionMetadataExcerptDto>> GetNewGuitarRevisionExcerptsAsync(RevisionParams revisionExcerptParams)
+  public async Task<PagedList<RevisionMetadataExcerptDto>> GetNewRevisionExcerptsAsync(RevisionParams revisionExcerptParams)
   {
     var query = context.GuitarRevisions.AsQueryable();
 
@@ -165,7 +164,7 @@ public class GuitarRepository(DataContext context) : IGuitarRepository
     return await PagedList<RevisionMetadataExcerptDto>.CreateAsync(dtoQuery, revisionExcerptParams.Page, revisionExcerptParams.PageSize);
   }
 
-  public async Task<GuitarRevisionSnapshotDto?> GetGuitarRevisionSnapshotAsync(int revisionId, bool userIsModerator, int? userId = null)
+  public async Task<GuitarRevisionSnapshotDto?> GetRevisionSnapshotAsync(int revisionId, bool userIsModerator, int? userId = null)
   {
     var gr = await context.GuitarRevisions
       .Include(g => g.RevisionMetadata)
@@ -194,7 +193,7 @@ public class GuitarRepository(DataContext context) : IGuitarRepository
       Version = gr.Revision.RevisionMetadata.Version,
       GuitarId = gr.Revision.GuitarId,
       ParentRevisionId = gr.Revision.RevisionMetadata.ParentRevisionId,
-      Iteration = gr.Revision.RevisionMetadata.Iteration,
+      RowVersion = gr.Revision.RevisionMetadata.RowVersion,
       Status = gr.Revision.RevisionMetadata.Status.ToString(),
       Name = gr.Revision.Name,
       Description = gr.Revision.Description,
@@ -213,12 +212,12 @@ public class GuitarRepository(DataContext context) : IGuitarRepository
     };
   }
 
-  public async Task<GuitarRevision?> GetGuitarRevisionEntityAsync(int revisionId)
+  public async Task<GuitarRevision?> GetRevisionEntityAsync(int revisionId)
   {
     return await context.GuitarRevisions.SingleOrDefaultAsync(g => g.Id == revisionId);
   }
 
-  public async Task<RevisionMetadataVersioningDto?> GetLatestGuitarRevisionVersionAsync(int guitarId)
+  public async Task<RevisionMetadataVersioningDto?> GetLatestRevisionVersionAsync(int guitarId)
   {
     var query = context.GuitarRevisions.AsQueryable();
 
@@ -233,9 +232,9 @@ public class GuitarRepository(DataContext context) : IGuitarRepository
       .FirstOrDefaultAsync();
   }
 
-  public GuitarRevision CreateInitialGuitarRevisionAsync(
+  public GuitarRevision CreateInitialRevision(
     RevisionMetadata revisionMetadata,
-    CreateGuitarRevisionDto createGuitarRevisionDto)
+    GuitarCreateRevisionDto createGuitarRevisionDto)
   {
     var guitarRevision = new GuitarRevision(revisionMetadata.Id)
     {
@@ -250,7 +249,7 @@ public class GuitarRepository(DataContext context) : IGuitarRepository
     return guitarRevision;
   }
 
-  public GuitarRevision CreateGuitarRevisionAsync(int guitarId, RevisionMetadata revisionMetadata, CreateGuitarRevisionDto createGuitarRevisionDto)
+  public GuitarRevision CreateRevision(int guitarId, RevisionMetadata revisionMetadata, GuitarCreateRevisionDto createGuitarRevisionDto)
   {
     var guitarRevision = new GuitarRevision(revisionMetadata.Id)
     {
@@ -265,7 +264,7 @@ public class GuitarRepository(DataContext context) : IGuitarRepository
     return guitarRevision;
   }
 
-  public async Task<GuitarRevision?> UpdateGuitarRevisionAsync(int revisionId, CreateGuitarRevisionDto createGuitarRevisionDto)
+  public async Task<GuitarRevision?> UpdateRevisionAsync(int revisionId, GuitarCreateRevisionDto createGuitarRevisionDto)
   {
     var guitarRevision = await context.GuitarRevisions
       .Where(g => g.Id == revisionId)

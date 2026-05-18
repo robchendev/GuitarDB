@@ -19,5 +19,10 @@ public class RevisionMetadataConfiguration : IEntityTypeConfiguration<RevisionMe
     builder.HasIndex(rm => rm.Version);
     builder.HasIndex(rm => rm.ParentRevisionId);
     builder.HasIndex(rm => rm.CreatedById);
+
+    // concurrency (replacement for rowVersion comparison)
+    builder
+      .Property(rm => rm.RowVersion)
+      .IsRowVersion();
   }
 }

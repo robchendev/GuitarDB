@@ -1,4 +1,3 @@
-using System.Reflection;
 using Backend.Common;
 using Backend.Common.Params;
 using Backend.Data;
@@ -13,7 +12,7 @@ namespace Backend.Repository;
 
 public class LuthierRepository(DataContext context) : ILuthierRepository
 {
-  public async Task<LuthierDto?> GetLuthierByIdAsync(int id)
+  public async Task<LuthierDto?> GetByIdAsync(int id)
   {
     return await context.Luthiers
       .Where(l => l.Id == id)
@@ -26,7 +25,7 @@ public class LuthierRepository(DataContext context) : ILuthierRepository
       .SingleOrDefaultAsync();
   }
 
-  public async Task<PagedList<LuthierDto>> GetLuthiersAsync(LuthierParams luthierParams)
+  public async Task<PagedList<LuthierDto>> GetAllAsync(LuthierSearchParams luthierParams)
   {
     var query = context.Luthiers.AsQueryable();
 
@@ -48,7 +47,7 @@ public class LuthierRepository(DataContext context) : ILuthierRepository
     return await PagedList<LuthierDto>.CreateAsync(dtoQuery, luthierParams.Page, luthierParams.PageSize);
   }
 
-  public Luthier CreateLuthier(LuthierRevision luthierRevision)
+  public Luthier Create(LuthierRevision luthierRevision)
   {
     var luthier = new Luthier
     {
@@ -62,7 +61,7 @@ public class LuthierRepository(DataContext context) : ILuthierRepository
     return luthier;
   }
 
-  public async Task<Luthier?> UpdateLuthierAsync(LuthierRevision luthierRevision)
+  public async Task<Luthier?> UpdateAsync(LuthierRevision luthierRevision)
   {
     var luthier = await context.Luthiers
       .Where(l => l.Id == luthierRevision.LuthierId)
@@ -76,7 +75,7 @@ public class LuthierRepository(DataContext context) : ILuthierRepository
     return luthier;
   }
 
-  public async Task<bool> DeleteLuthierAsync(int id)
+  public async Task<bool> DeleteAsync(int id)
   {
     var luthier = await context.Luthiers
       .Where(l => l.Id == id)
@@ -90,28 +89,29 @@ public class LuthierRepository(DataContext context) : ILuthierRepository
   }
 
   // TODO: Add logic to check if luthier exists via name + country  
-  public async Task<bool> LuthierExistsAsync(string name, int? brandId = null, int? luthierId = null, int? excludeId = null)
+  // get rid of brandId here
+  public async Task<bool> ExistsAsync(LuthierExistsParams @params)
   {
-    string normalizedName = name.ToLower();
+    string normalizedName = @params.Name.ToLower();
 
     var query = context.Luthiers.Where(l =>
       l.Name.ToLower() == normalizedName
     );
 
-    if (excludeId.HasValue)
+    if (@params.ExcludeId.HasValue)
     {
-      query = query.Where(l => l.Id != excludeId.Value);
+      query = query.Where(l => l.Id != @params.ExcludeId.Value);
     }
 
     return await query.AnyAsync();
   }
 
-  public async Task<bool> LuthierExistsByIdAsync(int id)
+  public async Task<bool> ExistsByIdAsync(int id)
   {
     return await context.Luthiers.AnyAsync(l => l.Id == id);
   }
 
-  public async Task<PagedList<RevisionMetadataExcerptDto>> GetLuthierRevisionExcerptsAsync(RevisionParams revisionExcerptParams, int luthierId, bool userIsModerator = false)
+  public async Task<PagedList<RevisionMetadataExcerptDto>> GetRevisionExcerptsAsync(RevisionParams revisionExcerptParams, int luthierId, bool userIsModerator = false)
   {
     var query = context.LuthierRevisions.AsQueryable();
 
@@ -138,7 +138,7 @@ public class LuthierRepository(DataContext context) : ILuthierRepository
     return await PagedList<RevisionMetadataExcerptDto>.CreateAsync(dtoQuery, revisionExcerptParams.Page, revisionExcerptParams.PageSize);
   }
 
-  public async Task<PagedList<RevisionMetadataExcerptDto>> GetNewLuthierRevisionExcerptsAsync(RevisionParams revisionExcerptParams)
+  public async Task<PagedList<RevisionMetadataExcerptDto>> GetNewRevisionExcerptsAsync(RevisionParams revisionExcerptParams)
   {
     var query = context.LuthierRevisions.AsQueryable();
 
@@ -157,7 +157,7 @@ public class LuthierRepository(DataContext context) : ILuthierRepository
     return await PagedList<RevisionMetadataExcerptDto>.CreateAsync(dtoQuery, revisionExcerptParams.Page, revisionExcerptParams.PageSize);
   }
 
-  public async Task<LuthierRevisionSnapshotDto?> GetLuthierRevisionSnapshotAsync(int revisionId, bool userIsModerator, int? userId = null)
+  public async Task<LuthierRevisionSnapshotDto?> GetRevisionSnapshotAsync(int revisionId, bool userIsModerator, int? userId = null)
   {
     var lr = await context.LuthierRevisions
       .Include(l => l.RevisionMetadata)
@@ -185,7 +185,7 @@ public class LuthierRepository(DataContext context) : ILuthierRepository
       Version = lr.Revision.RevisionMetadata.Version,
       LuthierId = lr.Revision.LuthierId,
       ParentRevisionId = lr.Revision.RevisionMetadata.ParentRevisionId,
-      Iteration = lr.Revision.RevisionMetadata.Iteration,
+      RowVersion = lr.Revision.RevisionMetadata.RowVersion,
       Status = lr.Revision.RevisionMetadata.Status.ToString(),
       Name = lr.Revision.Name,
       Description = lr.Revision.Description,
@@ -199,12 +199,12 @@ public class LuthierRepository(DataContext context) : ILuthierRepository
     };
   }
 
-  public async Task<LuthierRevision?> GetLuthierRevisionEntityAsync(int revisionId)
+  public async Task<LuthierRevision?> GetRevisionEntityAsync(int revisionId)
   {
     return await context.LuthierRevisions.SingleOrDefaultAsync(l => l.Id == revisionId);
   }
 
-  public async Task<RevisionMetadataVersioningDto?> GetLatestLuthierRevisionVersionAsync(int luthierId)
+  public async Task<RevisionMetadataVersioningDto?> GetLatestRevisionVersionAsync(int luthierId)
   {
     var query = context.LuthierRevisions.AsQueryable();
 
@@ -219,9 +219,9 @@ public class LuthierRepository(DataContext context) : ILuthierRepository
       .FirstOrDefaultAsync();
   }
 
-  public LuthierRevision CreateInitialLuthierRevisionAsync(
+  public LuthierRevision CreateInitialRevision(
     RevisionMetadata revisionMetadata,
-    CreateLuthierRevisionDto createLuthierRevisionDto)
+    LuthierCreateRevisionDto createLuthierRevisionDto)
   {
     var luthierRevision = new LuthierRevision(revisionMetadata.Id)
     {
@@ -235,7 +235,7 @@ public class LuthierRepository(DataContext context) : ILuthierRepository
     return luthierRevision;
   }
 
-  public LuthierRevision CreateLuthierRevisionAsync(int luthierId, RevisionMetadata revisionMetadata, CreateLuthierRevisionDto createLuthierRevisionDto)
+  public LuthierRevision CreateRevision(int luthierId, RevisionMetadata revisionMetadata, LuthierCreateRevisionDto createLuthierRevisionDto)
   {
     var luthierRevision = new LuthierRevision(revisionMetadata.Id)
     {
@@ -249,7 +249,7 @@ public class LuthierRepository(DataContext context) : ILuthierRepository
     return luthierRevision;
   }
 
-  public async Task<LuthierRevision?> UpdateLuthierRevisionAsync(int revisionId, CreateLuthierRevisionDto createLuthierRevisionDto)
+  public async Task<LuthierRevision?> UpdateRevisionAsync(int revisionId, LuthierCreateRevisionDto createLuthierRevisionDto)
   {
     var luthierRevision = await context.LuthierRevisions
       .Where(l => l.Id == revisionId)

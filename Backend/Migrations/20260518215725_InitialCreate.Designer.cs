@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Backend.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20260512021604_initialcreate")]
-    partial class initialcreate
+    [Migration("20260518215725_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -771,13 +771,15 @@ namespace Backend.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("created_by_id");
 
-                    b.Property<int>("Iteration")
-                        .HasColumnType("integer")
-                        .HasColumnName("iteration");
-
                     b.Property<int?>("ParentRevisionId")
                         .HasColumnType("integer")
                         .HasColumnName("parent_revision_id");
+
+                    b.Property<uint>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
 
                     b.Property<int>("Status")
                         .HasColumnType("integer")

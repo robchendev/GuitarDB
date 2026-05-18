@@ -6,9 +6,9 @@ public class Change
   public object? New { get; set; }
 }
 
-public class RevisionDiffDto // could this be refactored into a single DTO?
+public class RevisionDiffDto
 {
-  public int EntityId { get; set; } // should this be optional? works fine without?
+  public int EntityId { get; set; }
   public Dictionary<string, Change> Changes { get; set; } = new();
-  public int Iteration { get; set; }
+  public uint RowVersion { get; set; }
 }
