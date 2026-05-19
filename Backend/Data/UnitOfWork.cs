@@ -8,12 +8,14 @@ public class UnitOfWork(
   IUserRepository userRepository,
   IGuitarRepository guitarRepository,
   ILuthierRepository luthierRepository,
+  IBrandRepository brandRepository,
   IRevisionMetadataRepository revisionMetadataRepository
 ) : IUnitOfWork
 {
   public IUserRepository UserRepository => userRepository;
   public IGuitarRepository GuitarRepository => guitarRepository;
   public ILuthierRepository LuthierRepository => luthierRepository;
+  public IBrandRepository BrandRepository => brandRepository;
   public IRevisionMetadataRepository RevisionMetadataRepository => revisionMetadataRepository;
 
   public async Task<bool> SaveAllAsync()

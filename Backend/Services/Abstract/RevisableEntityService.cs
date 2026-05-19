@@ -14,6 +14,7 @@ using Backend.Interfaces.Services;
 namespace Backend.Services.Abstract;
 
 public abstract class RevisableEntityService<
+  TID,
   TEntity,
   TDto,
   TSearchParams,
@@ -41,6 +42,7 @@ public abstract class RevisableEntityService<
   protected string EntitySingular => entitySingular;
 
   protected abstract IRevisableEntityRepository<
+    TID,
     TEntity,
     TDto,
     TSearchParams,

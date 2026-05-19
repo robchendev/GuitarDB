@@ -14,6 +14,7 @@ using Backend.Services.Abstract;
 namespace Backend.Services;
 
 public class GuitarService : RevisableEntityService<
+  int,
   Guitar,
   GuitarDto,
   GuitarSearchParams,
@@ -26,6 +27,7 @@ public class GuitarService : RevisableEntityService<
   public GuitarService(IUnitOfWork unitOfWork) : base(unitOfWork, "Guitar") { }
 
   protected override IRevisableEntityRepository<
+    int,
     Guitar,
     GuitarDto,
     GuitarSearchParams,

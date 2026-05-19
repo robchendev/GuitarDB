@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Backend.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20260518215725_InitialCreate")]
+    [Migration("20260519032633_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -56,6 +56,10 @@ namespace Backend.Migrations
                     b.HasIndex("CountryId")
                         .HasDatabaseName("ix_brands_country_id");
 
+                    b.HasIndex("Name", "CountryId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_brands_name_country_id");
+
                     b.ToTable("brands", (string)null);
                 });
 
@@ -64,6 +68,11 @@ namespace Backend.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("text")
                         .HasColumnName("id");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("name");
 
                     b.HasKey("Id")
                         .HasName("pk_countries");
@@ -451,6 +460,44 @@ namespace Backend.Migrations
                         .HasColumnName("country_id");
 
                     b.Property<string>("Description")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)")
+                        .HasColumnName("description");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_luthiers");
+
+                    b.HasIndex("CountryId")
+                        .HasDatabaseName("ix_luthiers_country_id");
+
+                    b.HasIndex("Name", "CountryId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_luthiers_name_country_id");
+
+                    b.ToTable("luthiers", (string)null);
+                });
+
+            modelBuilder.Entity("Backend.Entities.Revision.BrandRevision", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    b.Property<int?>("BrandId")
+                        .HasColumnType("integer")
+                        .HasColumnName("brand_id");
+
+                    b.Property<string>("CountryId")
+                        .HasColumnType("text")
+                        .HasColumnName("country_id");
+
+                    b.Property<string>("Description")
                         .HasColumnType("text")
                         .HasColumnName("description");
 
@@ -460,12 +507,15 @@ namespace Backend.Migrations
                         .HasColumnName("name");
 
                     b.HasKey("Id")
-                        .HasName("pk_luthiers");
+                        .HasName("pk_brand_revisions");
+
+                    b.HasIndex("BrandId")
+                        .HasDatabaseName("ix_brand_revisions_brand_id");
 
                     b.HasIndex("CountryId")
-                        .HasDatabaseName("ix_luthiers_country_id");
+                        .HasDatabaseName("ix_brand_revisions_country_id");
 
-                    b.ToTable("luthiers", (string)null);
+                    b.ToTable("brand_revisions", (string)null);
                 });
 
             modelBuilder.Entity("Backend.Entities.Revision.GuitarRevision", b =>
@@ -1376,6 +1426,33 @@ namespace Backend.Migrations
                     b.Navigation("Country");
                 });
 
+            modelBuilder.Entity("Backend.Entities.Revision.BrandRevision", b =>
+                {
+                    b.HasOne("Backend.Entities.Brand", "Brand")
+                        .WithMany("Revisions")
+                        .HasForeignKey("BrandId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .HasConstraintName("fk_brand_revisions_brands_brand_id");
+
+                    b.HasOne("Backend.Entities.Catalog.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryId")
+                        .HasConstraintName("fk_brand_revisions_countries_country_id");
+
+                    b.HasOne("Backend.Entities.Revision.RevisionMetadata", "RevisionMetadata")
+                        .WithOne("BrandRevision")
+                        .HasForeignKey("Backend.Entities.Revision.BrandRevision", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_brand_revisions_revision_metadatas_id");
+
+                    b.Navigation("Brand");
+
+                    b.Navigation("Country");
+
+                    b.Navigation("RevisionMetadata");
+                });
+
             modelBuilder.Entity("Backend.Entities.Revision.GuitarRevision", b =>
                 {
                     b.HasOne("Backend.Entities.Catalog.MaterialConstruction", "BackMaterialConstruction")
@@ -1749,6 +1826,8 @@ namespace Backend.Migrations
             modelBuilder.Entity("Backend.Entities.Brand", b =>
                 {
                     b.Navigation("Guitars");
+
+                    b.Navigation("Revisions");
                 });
 
             modelBuilder.Entity("Backend.Entities.Catalog.Country", b =>
@@ -1783,6 +1862,8 @@ namespace Backend.Migrations
 
             modelBuilder.Entity("Backend.Entities.Revision.RevisionMetadata", b =>
                 {
+                    b.Navigation("BrandRevision");
+
                     b.Navigation("GuitarRevision");
 
                     b.Navigation("LuthierRevision");

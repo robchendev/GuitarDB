@@ -6,6 +6,7 @@ using Backend.Entities.Revision;
 namespace Backend.Interfaces.Repository;
 
 public interface IRevisableEntityRepository<
+  TID,
   TEntity,
   TDto,
   TSearchParams,
@@ -42,7 +43,7 @@ public interface IRevisableEntityRepository<
   /// </summary>
   /// <param name="id">The ID of the entity.</param>
   /// <returns><c>true</c> if an entity with the ID exists; otherwise, <c>false</c>.</returns>
-  Task<bool> ExistsByIdAsync(int id);
+  Task<bool> ExistsByIdAsync(TID id);
 
   /// <summary>
   /// Retrieves the Snapshot for the entity Revision.

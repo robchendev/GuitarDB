@@ -1,0 +1,9 @@
+[
+  {
+    "Id": 7,
+    "BrandId": 1,
+    "Name": "Taylor Guitars",
+    "Description": "Taylor Guitars description here",
+    "CountryId": "us"
+  }
+]

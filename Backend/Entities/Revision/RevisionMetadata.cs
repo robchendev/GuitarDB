@@ -24,4 +24,5 @@ public class RevisionMetadata : BaseAuditableEntity
   // Navigation to exactly one of the revision types
   public GuitarRevision? GuitarRevision { get; set; } = null!;
   public LuthierRevision? LuthierRevision { get; set; } = null!;
+  public BrandRevision? BrandRevision { get; set; } = null!;
 }

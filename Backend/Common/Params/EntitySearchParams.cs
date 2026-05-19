@@ -27,3 +27,11 @@ public class LuthierSearchParams : PaginationParams
 
   // TODO: country search
 }
+
+public class BrandSearchParams : PaginationParams
+{
+  [MaxLength(100, ErrorMessage = "Name cannot be more than 100 characters long.")]
+  public string? Name { get; set; }
+
+  // TODO: country search
+}

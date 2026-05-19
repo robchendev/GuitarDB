@@ -34,5 +34,11 @@
     "ParentRevisionId": null,
     "Version": 1,
     "Comment": "Luthier example revision, initial committed version"
+  },
+  {
+    "Status": 4,
+    "ParentRevisionId": null,
+    "Version": 1,
+    "Comment": "Brand example revision, initial committed version"
   }
 ]

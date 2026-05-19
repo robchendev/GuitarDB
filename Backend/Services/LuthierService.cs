@@ -14,6 +14,7 @@ using Backend.Services.Abstract;
 namespace Backend.Services;
 
 public class LuthierService : RevisableEntityService<
+  int,
   Luthier,
   LuthierDto,
   LuthierSearchParams,
@@ -26,6 +27,7 @@ public class LuthierService : RevisableEntityService<
   public LuthierService(IUnitOfWork unitOfWork) : base(unitOfWork, "Luthier") { }
 
   protected override IRevisableEntityRepository<
+    int,
     Luthier,
     LuthierDto,
     LuthierSearchParams,

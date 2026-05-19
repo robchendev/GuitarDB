@@ -18,3 +18,8 @@ public class LuthierExistsParams : EntityExistsParams
   public string? CountryId { get; set; }
 }
 
+public class BrandExistsParams : EntityExistsParams
+{
+  public required string Name { get; set; }
+  public string? CountryId { get; set; }
+}

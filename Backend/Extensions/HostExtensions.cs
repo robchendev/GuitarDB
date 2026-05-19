@@ -29,6 +29,7 @@ public static class HostExtensions
       // await Seed.SeedGuitarRevisions(context, "GuitarRevisions.json");
       await Seed.SeedTable<Country>(context, "Countries.json");
       await Seed.SeedTable<Brand>(context, "Brands.json");
+      await Seed.SeedTable<BrandRevision>(context, "BrandRevisions.json");
       await Seed.SeedTable<Luthier>(context, "Luthiers.json");
       await Seed.SeedTable<LuthierRevision>(context, "LuthierRevisions.json");
       await Seed.SeedTable<Guitar>(context, "Guitars.json");

@@ -6,6 +6,7 @@ using Backend.Entities.Revision;
 namespace Backend.Interfaces.Repository;
 
 public interface IGuitarRepository : IRevisableEntityRepository<
+  int,
   Guitar,
   GuitarDto,
   GuitarSearchParams,

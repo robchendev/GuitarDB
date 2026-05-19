@@ -70,7 +70,8 @@ namespace Backend.Migrations
                 name: "countries",
                 columns: table => new
                 {
-                    id = table.Column<string>(type: "text", nullable: false)
+                    id = table.Column<string>(type: "text", nullable: false),
+                    name = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -326,8 +327,8 @@ namespace Backend.Migrations
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    name = table.Column<string>(type: "text", nullable: false),
-                    description = table.Column<string>(type: "text", nullable: true),
+                    name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    description = table.Column<string>(type: "character varying(2000)", maxLength: 2000, nullable: true),
                     country_id = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
@@ -338,6 +339,38 @@ namespace Backend.Migrations
                         column: x => x.country_id,
                         principalTable: "countries",
                         principalColumn: "id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "brand_revisions",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false),
+                    brand_id = table.Column<int>(type: "integer", nullable: true),
+                    name = table.Column<string>(type: "text", nullable: false),
+                    description = table.Column<string>(type: "text", nullable: true),
+                    country_id = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_brand_revisions", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_brand_revisions_brands_brand_id",
+                        column: x => x.brand_id,
+                        principalTable: "brands",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "fk_brand_revisions_countries_country_id",
+                        column: x => x.country_id,
+                        principalTable: "countries",
+                        principalColumn: "id");
+                    table.ForeignKey(
+                        name: "fk_brand_revisions_revision_metadatas_id",
+                        column: x => x.id,
+                        principalTable: "revision_metadatas",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -844,9 +877,25 @@ namespace Backend.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "ix_brand_revisions_brand_id",
+                table: "brand_revisions",
+                column: "brand_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_brand_revisions_country_id",
+                table: "brand_revisions",
+                column: "country_id");
+
+            migrationBuilder.CreateIndex(
                 name: "ix_brands_country_id",
                 table: "brands",
                 column: "country_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_brands_name_country_id",
+                table: "brands",
+                columns: new[] { "name", "country_id" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_guitar_revisions_back_material_construction_id",
@@ -1155,6 +1204,12 @@ namespace Backend.Migrations
                 column: "country_id");
 
             migrationBuilder.CreateIndex(
+                name: "ix_luthiers_name_country_id",
+                table: "luthiers",
+                columns: new[] { "name", "country_id" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "ix_revision_metadatas_created_by_id",
                 table: "revision_metadatas",
                 column: "created_by_id");
@@ -1212,6 +1267,9 @@ namespace Backend.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "brand_revisions");
 
             migrationBuilder.DropTable(
                 name: "guitar_revisions");
